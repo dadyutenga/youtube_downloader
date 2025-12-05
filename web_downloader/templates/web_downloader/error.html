@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - YouTube Downloader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: hsl(260, 100%, 65%);
+            --primary-dark: hsl(260, 100%, 55%);
+            --secondary: hsl(200, 100%, 60%);
+            --bg-dark: hsl(230, 20%, 10%);
+            --bg-card: hsla(230, 20%, 15%, 0.7);
+            --text-primary: hsl(0, 0%, 95%);
+            --text-secondary: hsl(0, 0%, 70%);
+            --success: hsl(140, 70%, 55%);
+            --error: hsl(0, 70%, 60%);
+            --warning: hsl(45, 100%, 60%);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, hsl(260, 30%, 15%) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .error-container {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .error-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            background: hsla(0, 70%, 60%, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .error-icon svg {
+            width: 60px;
+            height: 60px;
+            color: var(--error);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--error);
+            margin-bottom: 1rem;
+        }
+
+        .error-message {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: hsla(0, 70%, 60%, 0.1);
+            border-radius: 12px;
+            border-left: 4px solid var(--error);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px hsla(260, 100%, 65%, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px hsla(260, 100%, 65%, 0.4);
+        }
+
+        .tips {
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .tips h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .tips ul {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            list-style-position: inside;
+        }
+
+        .tips li {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+        </div>
+
+        <h1>{{ error_title|default:"Error" }}</h1>
+        
+        <div class="error-message">
+            {{ error_message|default:"An unexpected error occurred. Please try again." }}
+        </div>
+
+        <a href="{% url 'web_downloader:index' %}" class="btn">← Back to Home</a>
+
+        <div class="tips">
+            <h3>Troubleshooting Tips:</h3>
+            <ul>
+                <li>Make sure the URL is a valid YouTube video link</li>
+                <li>Check if the video is publicly available</li>
+                <li>Some videos may be region-restricted or age-gated</li>
+                <li>Try refreshing the page and entering the URL again</li>
+                <li>If the problem persists, the video may have been removed</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

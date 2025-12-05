@@ -1,0 +1,4 @@
+# Django YouTube Downloader Dependencies
+Django>=4.2
+yt-dlp>=2024.0.0
+whitenoise>=6.0.0

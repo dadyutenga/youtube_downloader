@@ -144,6 +144,72 @@
             color: var(--text-secondary);
         }
 
+        .form-select option {
+            background: hsl(230, 20%, 15%);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .format-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .format-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .format-option input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .format-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: hsla(230, 20%, 20%, 0.6);
+            border: 2px solid hsla(0, 0%, 100%, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .format-option input:checked + label {
+            border-color: var(--primary);
+            background: hsla(260, 100%, 65%, 0.1);
+        }
+
+        .format-option label:hover {
+            border-color: hsla(0, 0%, 100%, 0.3);
+        }
+
+        .format-icon {
+            width: 28px;
+            height: 28px;
+        }
+
+        .format-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
         .btn {
             padding: 1rem 2.5rem;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
@@ -183,6 +249,35 @@
             transform: translateY(0);
         }
 
+        .messages {
+            margin-bottom: 1.5rem;
+        }
+
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .alert-success {
+            background: hsla(140, 70%, 55%, 0.15);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: hsla(0, 70%, 60%, 0.15);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+
+        .field-errors {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
         .downloads-section {
             margin-top: 3rem;
         }
@@ -218,27 +313,60 @@
         .download-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            gap: 1rem;
+        }
+
+        .download-info {
+            flex: 1;
+            min-width: 0;
         }
 
         .download-title {
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             color: var(--text-primary);
-            flex: 1;
+            margin-bottom: 0.25rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .download-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .download-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .format-badge {
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: hsla(260, 100%, 65%, 0.2);
+            color: var(--primary);
         }
 
         .status-badge {
             padding: 0.4rem 1rem;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            white-space: nowrap;
         }
 
-        .status-pending {
+        .status-pending, .status-fetching {
             background: hsla(45, 100%, 60%, 0.2);
             color: var(--warning);
         }
@@ -264,7 +392,7 @@
             background: hsla(0, 0%, 100%, 0.1);
             border-radius: 10px;
             overflow: hidden;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .progress-fill {
@@ -275,16 +403,27 @@
             box-shadow: 0 0 10px var(--primary);
         }
 
+        .progress-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
         .download-actions {
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
             margin-top: 1rem;
+            flex-wrap: wrap;
         }
 
         .btn-small {
-            padding: 0.6rem 1.5rem;
-            font-size: 0.9rem;
+            padding: 0.5rem 1.25rem;
+            font-size: 0.85rem;
             border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
         }
 
         .btn-success {
@@ -297,7 +436,7 @@
 
         .error-message {
             color: var(--error);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             margin-top: 0.5rem;
             padding: 0.75rem;
             background: hsla(0, 70%, 60%, 0.1);
@@ -318,6 +457,20 @@
             opacity: 0.5;
         }
 
+        .thumbnail-small {
+            width: 80px;
+            height: 45px;
+            border-radius: 6px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .download-content {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2rem;
@@ -330,7 +483,20 @@
             .download-header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 0.5rem;
+            }
+
+            .download-content {
+                flex-direction: column;
+            }
+
+            .thumbnail-small {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16/9;
+            }
+
+            .format-selector {
+                flex-direction: column;
             }
         }
     </style>
@@ -339,8 +505,18 @@
     <div class="container">
         <header>
             <h1>YouTube Downloader</h1>
-            <p class="subtitle">Download videos and playlists with ease</p>
+            <p class="subtitle">Download videos as MP4 or extract audio as MP3</p>
         </header>
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
 
         <div class="card">
             <form method="post" id="downloadForm">
@@ -348,11 +524,47 @@
                 <div class="form-group">
                     <label for="{{ form.url.id_for_label }}">YouTube URL</label>
                     {{ form.url }}
+                    {% if form.url.errors %}
+                    <div class="field-errors">
+                        {% for error in form.url.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
                 </div>
+
                 <div class="form-group">
-                    <label for="{{ form.quality.id_for_label }}">Quality</label>
-                    {{ form.quality }}
+                    <label>Format</label>
+                    <div class="format-selector">
+                        <div class="format-option">
+                            <input type="radio" name="format_type" id="format_mp4" value="mp4" 
+                                   {% if form.format_type.value == 'mp4' or not form.format_type.value %}checked{% endif %}>
+                            <label for="format_mp4">
+                                <svg class="format-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                                <span class="format-name">MP4 Video</span>
+                            </label>
+                        </div>
+                        <div class="format-option">
+                            <input type="radio" name="format_type" id="format_mp3" value="mp3"
+                                   {% if form.format_type.value == 'mp3' %}checked{% endif %}>
+                            <label for="format_mp3">
+                                <svg class="format-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                                </svg>
+                                <span class="format-name">MP3 Audio</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="form-group" id="quality-group">
+                    <label for="{{ form.quality.id_for_label }}">Video Quality</label>
+                    {{ form.quality }}
+                    <p class="quality-note" id="mp3-note" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem; display: none;">
+                        Audio will be extracted at the best available quality.
+                    </p>
+                </div>
+
                 <button type="submit" class="btn">Start Download</button>
             </form>
         </div>
@@ -364,20 +576,31 @@
                 {% for download in downloads %}
                 <div class="download-item" data-download-id="{{ download.id }}">
                     <div class="download-header">
-                        <div class="download-title">
-                            {{ download.title|default:"Processing..." }}
+                        <div class="download-info">
+                            <div class="download-title">
+                                {{ download.title|default:"Processing..." }}
+                            </div>
+                            <div class="download-meta">
+                                <span class="format-badge">{{ download.format_type|upper }}</span>
+                                {% if download.duration %}
+                                <span>{{ download.duration_formatted }}</span>
+                                {% endif %}
+                                {% if download.file_size_formatted %}
+                                <span>{{ download.file_size_formatted }}</span>
+                                {% endif %}
+                            </div>
                         </div>
                         <span class="status-badge status-{{ download.status }}">
                             {{ download.get_status_display }}
                         </span>
                     </div>
                     
-                    {% if download.status == 'downloading' or download.status == 'pending' %}
+                    {% if download.status == 'downloading' or download.status == 'pending' or download.status == 'fetching' %}
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: {{ download.progress }}%"></div>
                     </div>
-                    <div class="progress-text" style="color: var(--text-secondary); font-size: 0.9rem;">
-                        {{ download.progress }}%
+                    <div class="progress-text">
+                        {{ download.progress }}% complete
                     </div>
                     {% endif %}
                     
@@ -390,12 +613,18 @@
                     <div class="download-actions">
                         {% if download.status == 'completed' and download.file_path %}
                         <a href="{% url 'web_downloader:download_file' download.id %}" class="btn btn-small btn-success">
-                            Download File
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            Download
                         </a>
                         {% endif %}
                         <form method="post" action="{% url 'web_downloader:delete_download' download.id %}" style="display: inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-small btn-danger" onclick="return confirm('Delete this download?')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
                                 Delete
                             </button>
                         </form>
@@ -414,6 +643,35 @@
     </div>
 
     <script>
+        // Handle format selection and quality visibility
+        const mp4Radio = document.getElementById('format_mp4');
+        const mp3Radio = document.getElementById('format_mp3');
+        const qualityGroup = document.getElementById('quality-group');
+        const qualitySelect = document.getElementById('id_quality');
+        const mp3Note = document.getElementById('mp3-note');
+
+        function updateQualityVisibility() {
+            if (mp3Radio && mp3Radio.checked) {
+                if (qualitySelect) {
+                    qualitySelect.disabled = true;
+                    qualitySelect.style.opacity = '0.5';
+                }
+                if (mp3Note) mp3Note.style.display = 'block';
+            } else {
+                if (qualitySelect) {
+                    qualitySelect.disabled = false;
+                    qualitySelect.style.opacity = '1';
+                }
+                if (mp3Note) mp3Note.style.display = 'none';
+            }
+        }
+
+        if (mp4Radio) mp4Radio.addEventListener('change', updateQualityVisibility);
+        if (mp3Radio) mp3Radio.addEventListener('change', updateQualityVisibility);
+        
+        // Initial check
+        updateQualityVisibility();
+
         // Auto-refresh progress for active downloads
         function updateProgress() {
             const activeDownloads = document.querySelectorAll('[data-download-id]');
@@ -421,29 +679,37 @@
             activeDownloads.forEach(item => {
                 const downloadId = item.dataset.downloadId;
                 const statusBadge = item.querySelector('.status-badge');
-                const status = statusBadge.textContent.trim().toLowerCase();
+                const statusClass = statusBadge.className;
                 
-                if (status === 'downloading' || status === 'pending') {
+                // Check if download is still in progress
+                const isActive = statusClass.includes('status-downloading') || 
+                               statusClass.includes('status-pending') ||
+                               statusClass.includes('status-fetching');
+                
+                if (isActive) {
                     fetch(`/progress/${downloadId}/`)
                         .then(response => response.json())
                         .then(data => {
                             // Update progress bar
                             const progressFill = item.querySelector('.progress-fill');
                             const progressText = item.querySelector('.progress-text');
-                            if (progressFill && progressText) {
+                            if (progressFill) {
                                 progressFill.style.width = data.progress + '%';
-                                progressText.textContent = data.progress + '%';
+                            }
+                            if (progressText) {
+                                progressText.textContent = data.progress + '% complete';
                             }
                             
                             // Update title
                             const titleEl = item.querySelector('.download-title');
-                            if (titleEl && data.title) {
+                            if (titleEl && data.title && data.title !== 'Processing...') {
                                 titleEl.textContent = data.title;
                             }
                             
-                            // Update status
-                            if (data.status !== status) {
-                                // Reload page if status changed
+                            // Check if status changed
+                            const currentStatus = data.status;
+                            if (currentStatus === 'completed' || currentStatus === 'failed') {
+                                // Reload page to show updated UI
                                 location.reload();
                             }
                         })
