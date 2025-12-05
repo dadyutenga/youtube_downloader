@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ditronics YouTube Metadata Fetcher - Fast, Isolated & Parallel</title>
+    <title>Ditronics YouTube Downloader - Fast, Isolated & Parallel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -199,6 +199,11 @@
             margin-left: auto;
             margin-right: auto;
             font-weight: 400;
+        }
+
+        .hero-subtitle .download-word {
+            color: var(--primary);
+            font-weight: 600;
         }
 
         .hero-highlight {
@@ -1055,7 +1060,7 @@
                 </div>
                 <div>
                     <span class="logo-text">Di<span>tronics</span></span>
-                    <div class="logo-subtitle">Metadata Fetcher</div>
+                    <div class="logo-subtitle">YouTube Downloader</div>
                 </div>
             </a>
             <ul class="nav-links">
@@ -1075,10 +1080,10 @@
                 </svg>
                 Fetch-Only Architecture • Isolated Sessions
             </div>
-            <h1>YouTube <span>Metadata Fetcher</span></h1>
+            <h1>YouTube <span>Downloader</span></h1>
             <p class="hero-subtitle">
-                <span class="hero-highlight">Fetch metadata first</span>, prepare downloads independently. 
-                Every session is <span class="hero-highlight">isolated</span> and runs in <span class="hero-highlight">parallel</span> — no interference, no waiting.
+                <span class="download-word">Fetch metadata first</span>, then prepare your <span class="download-word">downloads</span> independently. 
+                Every session is <span class="download-word">isolated</span> and runs in <span class="download-word">parallel</span> — no interference, no waiting.
             </p>
 
             {% if messages %}
@@ -1256,6 +1261,13 @@
         </div>
     </section>
 
+    <!-- Hidden downloads data for polling -->
+    <div style="display: none;" id="downloadsData">
+        {% for download in downloads %}
+        <div data-download-id="{{ download.id }}"></div>
+        {% endfor %}
+    </div>
+
     <!-- Features Section -->
     <section class="features" id="features">
         <div class="features-container">
@@ -1351,7 +1363,7 @@
 
     <script>
         // State management
-        let activeTasks = [];
+        let activeDownloads = new Map(); // downloadId -> download data
         let currentVideoData = null;
 
         // DOM elements
@@ -1365,7 +1377,7 @@
         const tasksContainer = document.getElementById('tasksContainer');
         const tasksCount = document.getElementById('tasksCount');
 
-        // Fetch video metadata
+        // Fetch video metadata (NO TASK CREATION HERE!)
         fetchForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -1378,18 +1390,11 @@
             fetchErrors.style.display = 'none';
             metadataCard.classList.remove('visible');
 
-            // Create task
-            const taskId = Date.now();
-            addTask(taskId, url, 'fetching');
-
             try {
                 const response = await fetch(`/api/video-info/?url=${encodeURIComponent(url)}`);
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Update task status
-                    updateTaskStatus(taskId, 'ready', 100);
-                    
                     // Store video data
                     currentVideoData = { ...data, url };
                     
@@ -1413,11 +1418,9 @@
                         metadataCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     }, 100);
                 } else {
-                    updateTaskStatus(taskId, 'error', 0);
                     showError(data.error || 'Failed to fetch video information');
                 }
             } catch (error) {
-                updateTaskStatus(taskId, 'error', 0);
                 showError('Network error. Please try again.');
                 console.error('Fetch error:', error);
             } finally {
@@ -1432,34 +1435,69 @@
             }
         });
 
-        // Prepare download
+        // Start actual download
         prepareBtn.addEventListener('click', async () => {
             if (!currentVideoData) return;
 
             const selectedFormat = document.querySelector('input[name="format"]:checked').value;
             
+            // Parse format selection
+            let formatType, quality;
+            if (selectedFormat === 'mp3') {
+                formatType = 'mp3';
+                quality = 'best';
+            } else if (selectedFormat === 'mp4_720') {
+                formatType = 'mp4';
+                quality = '720p';
+            } else if (selectedFormat === 'mp4_1080') {
+                formatType = 'mp4';
+                quality = '1080p';
+            } else if (selectedFormat === 'mp4_480') {
+                formatType = 'mp4';
+                quality = '480p';
+            } else {
+                formatType = 'mp4';
+                quality = '720p';
+            }
+            
             prepareBtn.disabled = true;
-            prepareBtn.innerHTML = '<div class="spinner"></div> Preparing...';
+            prepareBtn.innerHTML = '<div class="spinner"></div> Starting Download...';
 
-            // Create preparation task
-            const taskId = Date.now();
-            addTask(taskId, currentVideoData.title, 'preparing');
-
-            // Simulate preparation (in real app, this would call your backend)
-            setTimeout(() => {
-                updateTaskStatus(taskId, 'ready', 100);
-                prepareBtn.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                    Start Download
-                `;
-                prepareBtn.disabled = false;
-                
-                // Here you would typically start the actual download
-                // For now, we'll just show an alert
-                alert(`Download prepared for: ${currentVideoData.title}\nFormat: ${selectedFormat.toUpperCase()}\n\nIn a full implementation, this would initiate the download.`);
-            }, 2000);
+            // Create form and submit it
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/';
+            
+            const csrfToken = document.querySelector('#fetchForm [name=csrfmiddlewaretoken]').value;
+            
+            // Add hidden inputs
+            const urlInput = document.createElement('input');
+            urlInput.type = 'hidden';
+            urlInput.name = 'url';
+            urlInput.value = currentVideoData.url;
+            
+            const formatInput = document.createElement('input');
+            formatInput.type = 'hidden';
+            formatInput.name = 'format_type';
+            formatInput.value = formatType;
+            
+            const qualityInput = document.createElement('input');
+            qualityInput.type = 'hidden';
+            qualityInput.name = 'quality';
+            qualityInput.value = quality;
+            
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = csrfToken;
+            
+            form.appendChild(urlInput);
+            form.appendChild(formatInput);
+            form.appendChild(qualityInput);
+            form.appendChild(csrfInput);
+            
+            document.body.appendChild(form);
+            form.submit();
         });
 
         // Cancel button
@@ -1467,41 +1505,75 @@
             metadataCard.classList.remove('visible');
             videoUrlInput.value = '';
             currentVideoData = null;
-            prepareBtn.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Prepare Download
-            `;
         });
 
-        // Task management
-        function addTask(id, title, status) {
-            const task = { id, title, status, progress: 0 };
-            activeTasks.push(task);
-            renderTasks();
-        }
-
-        function updateTaskStatus(id, status, progress = 0) {
-            const task = activeTasks.find(t => t.id === id);
-            if (task) {
-                task.status = status;
-                task.progress = progress;
+        // Poll for active downloads using API
+        async function pollDownloads() {
+            try {
+                // Get all recent downloads from the page or API
+                const response = await fetch('/');
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Find all download items
+                const downloadElements = doc.querySelectorAll('[data-download-id]');
+                
+                // Clear and rebuild active downloads
+                const previousSize = activeDownloads.size;
+                activeDownloads.clear();
+                
+                const promises = [];
+                downloadElements.forEach(el => {
+                    const id = el.dataset.downloadId;
+                    // Fetch detailed progress for each download
+                    promises.push(
+                        fetch(`/progress/${id}/`)
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.status !== 'completed' && data.status !== 'failed') {
+                                    activeDownloads.set(id, {
+                                        id: data.id,
+                                        title: data.title || 'Processing...',
+                                        status: data.status,
+                                        progress: data.progress || 0,
+                                        format: data.format_type?.toUpperCase() || 'MP4'
+                                    });
+                                }
+                            })
+                            .catch(err => console.error(`Error fetching progress for ${id}:`, err))
+                    );
+                });
+                
+                await Promise.all(promises);
+                
                 renderTasks();
+                
+                // Continue polling if there are active downloads
+                if (activeDownloads.size > 0) {
+                    setTimeout(pollDownloads, 2000);
+                }
+            } catch (error) {
+                console.error('Poll error:', error);
+                // Retry polling even on error
+                if (activeDownloads.size > 0) {
+                    setTimeout(pollDownloads, 3000);
+                }
             }
         }
 
         function renderTasks() {
-            const activeCount = activeTasks.filter(t => t.status !== 'ready' && t.status !== 'error').length;
+            const tasks = Array.from(activeDownloads.values());
+            const activeCount = tasks.filter(t => t.status === 'downloading' || t.status === 'fetching' || t.status === 'pending').length;
             tasksCount.textContent = `${activeCount} active`;
 
-            if (activeTasks.length === 0) {
+            if (tasks.length === 0) {
                 tasksContainer.innerHTML = `
                     <div class="empty-tasks">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
-                        <p>No tasks running. Each fetch creates an independent task that runs in parallel.</p>
+                        <p>No downloads in progress. Start a download to see it here.</p>
                     </div>
                 `;
                 return;
@@ -1509,14 +1581,15 @@
 
             tasksContainer.innerHTML = `
                 <div class="tasks-grid">
-                    ${activeTasks.map(task => `
+                    ${tasks.map(task => `
                         <div class="task-card">
                             <div class="task-header">
                                 <div class="task-title">${escapeHtml(task.title)}</div>
                                 <span class="task-status ${task.status}">${task.status}</span>
                             </div>
                             <div class="task-meta">
-                                <span>Task ID: ${task.id}</span>
+                                <span>${task.format}</span>
+                                <span>ID: ${task.id}</span>
                             </div>
                             <div class="task-progress">
                                 <div class="task-progress-fill" style="width: ${task.progress}%"></div>
@@ -1559,8 +1632,10 @@
             });
         });
 
-        // Initialize
-        renderTasks();
+        // Initialize - start polling if there are existing downloads
+        document.addEventListener('DOMContentLoaded', () => {
+            pollDownloads();
+        });
     </script>
 </body>
 </html>
