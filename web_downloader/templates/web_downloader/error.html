@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error - YouTube Downloader</title>
+    <title>Error - Ditronics YouTube Downloader</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,40 +15,114 @@
         }
 
         :root {
-            --primary: hsl(260, 100%, 65%);
-            --primary-dark: hsl(260, 100%, 55%);
-            --secondary: hsl(200, 100%, 60%);
-            --bg-dark: hsl(230, 20%, 10%);
-            --bg-card: hsla(230, 20%, 15%, 0.7);
-            --text-primary: hsl(0, 0%, 95%);
-            --text-secondary: hsl(0, 0%, 70%);
-            --success: hsl(140, 70%, 55%);
-            --error: hsl(0, 70%, 60%);
-            --warning: hsl(45, 100%, 60%);
+            --primary: #2ee6c8;
+            --primary-dark: #26c9ad;
+            --primary-light: #e8fdf9;
+            --primary-glow: rgba(46, 230, 200, 0.3);
+            --bg-white: #ffffff;
+            --bg-light: #fafbfc;
+            --text-dark: #1a1a2e;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border-light: #e5e7eb;
+            --border-lighter: #f3f4f6;
+            --success: #10b981;
+            --error: #ef4444;
+            --error-light: #fef2f2;
+            --warning: #f59e0b;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
         }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, hsl(260, 30%, 15%) 100%);
-            color: var(--text-primary);
+            background: var(--bg-light);
+            color: var(--text-dark);
             min-height: 100vh;
-            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--bg-white);
+            box-shadow: var(--shadow-sm);
+            border-bottom: 1px solid var(--border-lighter);
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 4px 14px var(--primary-glow);
+        }
+
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .logo-text span {
+            color: var(--primary);
+        }
+
+        /* Error Content */
+        .error-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
         }
 
         .error-container {
-            max-width: 600px;
+            max-width: 500px;
             width: 100%;
             text-align: center;
         }
 
+        .error-card {
+            background: var(--bg-white);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-xl);
+        }
+
         .error-icon {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             margin: 0 auto 2rem;
-            background: hsla(0, 70%, 60%, 0.1);
+            background: var(--error-light);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -57,104 +131,136 @@
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .error-icon svg {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             color: var(--error);
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 1.75rem;
             font-weight: 700;
-            color: var(--error);
+            color: var(--text-dark);
             margin-bottom: 1rem;
         }
 
         .error-message {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--text-secondary);
-            line-height: 1.6;
+            line-height: 1.7;
             margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: hsla(0, 70%, 60%, 0.1);
+            padding: 1.25rem;
+            background: var(--error-light);
             border-radius: 12px;
             border-left: 4px solid var(--error);
+            text-align: left;
         }
 
-        .btn {
-            display: inline-block;
-            padding: 1rem 2.5rem;
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             text-decoration: none;
             border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px hsla(260, 100%, 65%, 0.3);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px hsla(260, 100%, 65%, 0.4);
-        }
-
-        .tips {
-            margin-top: 3rem;
-            padding: 1.5rem;
-            background: var(--bg-card);
-            border-radius: 12px;
-            text-align: left;
-        }
-
-        .tips h3 {
             font-size: 1rem;
             font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px var(--primary-glow);
         }
 
-        .tips ul {
-            color: var(--text-secondary);
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--primary-glow);
+        }
+
+        .btn-primary svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-light);
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
             font-size: 0.9rem;
-            list-style-position: inside;
         }
 
-        .tips li {
-            margin-bottom: 0.5rem;
+        .footer-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .error-card {
+                padding: 2rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="error-container">
-        <div class="error-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="{% url 'web_downloader:index' %}" class="logo">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <span class="logo-text">Di<span>tronics</span></span>
+            </a>
         </div>
+    </nav>
 
-        <h1>{{ error_title|default:"Error" }}</h1>
-        
-        <div class="error-message">
-            {{ error_message|default:"An unexpected error occurred. Please try again." }}
-        </div>
-
-        <a href="{% url 'web_downloader:index' %}" class="btn">← Back to Home</a>
-
-        <div class="tips">
-            <h3>Troubleshooting Tips:</h3>
-            <ul>
-                <li>Make sure the URL is a valid YouTube video link</li>
-                <li>Check if the video is publicly available</li>
-                <li>Some videos may be region-restricted or age-gated</li>
-                <li>Try refreshing the page and entering the URL again</li>
-                <li>If the problem persists, the video may have been removed</li>
-            </ul>
+    <!-- Error Content -->
+    <div class="error-wrapper">
+        <div class="error-container">
+            <div class="error-card">
+                <div class="error-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h1>{{ error_title|default:"Something went wrong" }}</h1>
+                <p class="error-message">{{ error_message|default:"An unexpected error occurred. Please try again." }}</p>
+                <a href="{% url 'web_downloader:index' %}" class="btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Back to Home
+                </a>
+            </div>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-text">
+            © 2025 <a href="{% url 'web_downloader:index' %}">Ditronics</a>. Fast, secure, no watermark.
+        </p>
+    </footer>
 </body>
 </html>

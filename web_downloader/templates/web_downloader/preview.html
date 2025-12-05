@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ video_info.title|default:"Video Preview" }} - YouTube Downloader</title>
+    <title>{{ video_info.title|default:"Video Preview" }} - Ditronics YouTube Downloader</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,29 +15,111 @@
         }
 
         :root {
-            --primary: hsl(260, 100%, 65%);
-            --primary-dark: hsl(260, 100%, 55%);
-            --secondary: hsl(200, 100%, 60%);
-            --bg-dark: hsl(230, 20%, 10%);
-            --bg-card: hsla(230, 20%, 15%, 0.7);
-            --text-primary: hsl(0, 0%, 95%);
-            --text-secondary: hsl(0, 0%, 70%);
-            --success: hsl(140, 70%, 55%);
-            --error: hsl(0, 70%, 60%);
-            --warning: hsl(45, 100%, 60%);
+            --primary: #2ee6c8;
+            --primary-dark: #26c9ad;
+            --primary-light: #e8fdf9;
+            --primary-glow: rgba(46, 230, 200, 0.3);
+            --bg-white: #ffffff;
+            --bg-light: #fafbfc;
+            --text-dark: #1a1a2e;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border-light: #e5e7eb;
+            --border-lighter: #f3f4f6;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
         }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, hsl(260, 30%, 15%) 100%);
-            color: var(--text-primary);
+            background: var(--bg-light);
+            color: var(--text-dark);
             min-height: 100vh;
-            padding: 2rem;
+            line-height: 1.6;
         }
 
-        .container {
+        /* Navigation */
+        .navbar {
+            background: var(--bg-white);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-lighter);
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px var(--primary-glow);
+        }
+
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .logo-text span {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        .main-content {
             max-width: 900px;
             margin: 0 auto;
+            padding: 2rem;
         }
 
         .back-link {
@@ -47,28 +129,34 @@
             color: var(--text-secondary);
             text-decoration: none;
             margin-bottom: 2rem;
-            font-size: 0.9rem;
-            transition: color 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
         }
 
         .back-link:hover {
             color: var(--primary);
         }
 
-        .video-preview {
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
+        .back-link svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Video Preview Card */
+        .video-preview-card {
+            background: var(--bg-white);
             border-radius: 20px;
             overflow: hidden;
-            border: 1px solid hsla(0, 0%, 100%, 0.1);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-xl);
         }
 
         .thumbnail-container {
             position: relative;
             width: 100%;
             aspect-ratio: 16/9;
-            background: hsl(230, 20%, 12%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
         }
 
         .thumbnail-container img {
@@ -81,12 +169,13 @@
             position: absolute;
             bottom: 1rem;
             right: 1rem;
-            background: hsla(0, 0%, 0%, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             color: white;
-            padding: 0.3rem 0.6rem;
-            border-radius: 4px;
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
             font-size: 0.85rem;
-            font-weight: 500;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
         }
 
         .video-info {
@@ -95,7 +184,8 @@
 
         .video-title {
             font-size: 1.5rem;
-            font-weight: 600;
+            font-weight: 700;
+            color: var(--text-dark);
             margin-bottom: 1rem;
             line-height: 1.4;
         }
@@ -104,7 +194,7 @@
             display: flex;
             gap: 2rem;
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             margin-bottom: 2rem;
             flex-wrap: wrap;
         }
@@ -116,59 +206,53 @@
         }
 
         .video-meta svg {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
+            color: var(--primary);
         }
 
+        /* Download Options */
         .download-options {
-            background: hsla(230, 20%, 18%, 0.6);
-            border-radius: 12px;
-            padding: 1.5rem;
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .download-options-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .download-options-header svg {
+            width: 24px;
+            height: 24px;
+            color: var(--primary);
         }
 
         .download-options h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-dark);
         }
 
         .form-group {
             margin-bottom: 1.5rem;
         }
 
-        .form-group label {
+        .form-label {
             display: block;
             margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .form-select {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            background: hsla(230, 20%, 20%, 0.8);
-            border: 2px solid hsla(0, 0%, 100%, 0.1);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 1rem;
-            font-family: inherit;
-            cursor: pointer;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .form-select:focus {
-            border-color: var(--primary);
-        }
-
-        .form-select option {
-            background: hsl(230, 20%, 15%);
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
         }
 
         .format-selector {
             display: flex;
             gap: 1rem;
-            margin-bottom: 1.5rem;
         }
 
         .format-option {
@@ -187,31 +271,35 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
-            padding: 1rem;
-            background: hsla(230, 20%, 20%, 0.6);
-            border: 2px solid hsla(0, 0%, 100%, 0.1);
-            border-radius: 12px;
+            gap: 0.75rem;
+            padding: 1.25rem;
+            background: var(--bg-white);
+            border: 2px solid var(--border-light);
+            border-radius: 14px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .format-option input:checked + label {
             border-color: var(--primary);
-            background: hsla(260, 100%, 65%, 0.1);
+            background: var(--primary-light);
+            box-shadow: 0 0 0 4px var(--primary-glow);
         }
 
         .format-option label:hover {
-            border-color: hsla(0, 0%, 100%, 0.3);
+            border-color: var(--primary);
         }
 
         .format-icon {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
+            color: var(--primary);
         }
 
         .format-name {
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-dark);
         }
 
         .format-desc {
@@ -219,29 +307,34 @@
             color: var(--text-secondary);
         }
 
-        .btn {
+        .form-select {
             width: 100%;
-            padding: 1rem 2rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
+            padding: 1rem 1.25rem;
+            background: var(--bg-white);
+            border: 2px solid var(--border-light);
             border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1rem;
+            font-family: inherit;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px hsla(260, 100%, 65%, 0.3);
+            outline: none;
+            transition: all 0.2s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 20px;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px hsla(260, 100%, 65%, 0.4);
+        .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
         }
 
         .quality-note {
             font-size: 0.85rem;
             color: var(--text-secondary);
-            margin-top: 0.5rem;
+            margin-top: 0.75rem;
             display: none;
         }
 
@@ -249,27 +342,130 @@
             display: block;
         }
 
+        .btn-primary {
+            width: 100%;
+            padding: 1.125rem 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px var(--primary-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--primary-glow);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-light);
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            .video-info {
+                padding: 1.5rem;
+            }
+
+            .video-title {
+                font-size: 1.25rem;
+            }
+
             .video-meta {
                 gap: 1rem;
+            }
+
+            .download-options {
+                padding: 1.5rem;
             }
 
             .format-selector {
                 flex-direction: column;
             }
+
+            .nav-links {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="{% url 'web_downloader:index' %}" class="logo">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <span class="logo-text">Di<span>tronics</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{% url 'web_downloader:index' %}#features">Features</a></li>
+                <li><a href="{% url 'web_downloader:index' %}#downloads">Downloads</a></li>
+                <li><a href="{% url 'web_downloader:index' %}#support">Support</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
         <a href="{% url 'web_downloader:index' %}" class="back-link">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
             Back to Home
         </a>
 
-        <div class="video-preview">
+        <div class="video-preview-card">
             <div class="thumbnail-container">
                 {% if video_info.thumbnail %}
                 <img src="{{ video_info.thumbnail }}" alt="{{ video_info.title }}">
@@ -299,14 +495,19 @@
                 </div>
 
                 <div class="download-options">
-                    <h3>Download Options</h3>
+                    <div class="download-options-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        <h3>Download Options</h3>
+                    </div>
                     
                     <form method="post" action="{% url 'web_downloader:index' %}">
                         {% csrf_token %}
                         <input type="hidden" name="url" value="{{ url }}">
                         
                         <div class="form-group">
-                            <label>Select Format</label>
+                            <label class="form-label">Select Format</label>
                             <div class="format-selector">
                                 <div class="format-option">
                                     <input type="radio" name="format_type" id="format_mp4" value="mp4" checked>
@@ -332,9 +533,9 @@
                         </div>
 
                         <div class="form-group" id="quality-group">
-                            <label for="id_quality">Video Quality</label>
+                            <label class="form-label" for="id_quality">Video Quality</label>
                             <select name="quality" id="id_quality" class="form-select">
-                                <option value="best">Best Quality</option>
+                                <option value="best">Best Quality (Recommended)</option>
                                 <option value="1080p">1080p (Full HD)</option>
                                 <option value="720p" selected>720p (HD)</option>
                                 <option value="480p">480p (SD)</option>
@@ -343,14 +544,26 @@
                             <p class="quality-note" id="mp3-note">Audio will be extracted at the best available quality.</p>
                         </div>
 
-                        <button type="submit" class="btn">
+                        <button type="submit" class="btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
                             Start Download
                         </button>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p class="footer-text">
+                © 2025 <a href="{% url 'web_downloader:index' %}">Ditronics</a>. Fast, secure, no watermark.
+            </p>
+        </div>
+    </footer>
 
     <script>
         // Handle format selection and quality visibility

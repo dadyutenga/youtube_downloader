@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Downloader - Premium</title>
+    <title>Ditronics YouTube Downloader - Fast & Secure Video Downloads</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,155 +15,760 @@
         }
 
         :root {
-            --primary: hsl(260, 100%, 65%);
-            --primary-dark: hsl(260, 100%, 55%);
-            --secondary: hsl(200, 100%, 60%);
-            --bg-dark: hsl(230, 20%, 10%);
-            --bg-card: hsla(230, 20%, 15%, 0.7);
-            --text-primary: hsl(0, 0%, 95%);
-            --text-secondary: hsl(0, 0%, 70%);
-            --success: hsl(140, 70%, 55%);
-            --error: hsl(0, 70%, 60%);
-            --warning: hsl(45, 100%, 60%);
+            --primary: #2ee6c8;
+            --primary-dark: #26c9ad;
+            --primary-light: #e8fdf9;
+            --primary-glow: rgba(46, 230, 200, 0.3);
+            --bg-white: #ffffff;
+            --bg-light: #fafbfc;
+            --text-dark: #1a1a2e;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border-light: #e5e7eb;
+            --border-lighter: #f3f4f6;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
         }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, hsl(260, 30%, 15%) 100%);
-            color: var(--text-primary);
+            background: var(--bg-white);
+            color: var(--text-dark);
             min-height: 100vh;
-            padding: 2rem;
-            position: relative;
-            overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            right: -50%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, hsla(260, 100%, 65%, 0.15) 0%, transparent 70%);
-            pointer-events: none;
-            animation: pulse 8s ease-in-out infinite;
+        /* Navigation */
+        .navbar {
+            background: var(--bg-white);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-lighter);
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.1); }
-        }
-
-        .container {
+        .navbar-container {
             max-width: 1200px;
             margin: 0 auto;
-            position: relative;
-            z-index: 1;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 3rem;
-            animation: fadeInDown 0.6s ease;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
         }
 
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px var(--primary-glow);
         }
 
-        h1 {
-            font-size: 3rem;
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
+            color: var(--text-dark);
         }
 
-        .subtitle {
+        .logo-text span {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
             color: var(--text-secondary);
-            font-size: 1.1rem;
-            font-weight: 300;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
         }
 
-        .card {
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid hsla(0, 0%, 100%, 0.1);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: fadeInUp 0.6s ease;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .nav-links a:hover {
+            color: var(--primary);
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Hero Section */
+        .hero {
+            padding: 5rem 2rem;
+            text-align: center;
+            background: linear-gradient(180deg, var(--bg-white) 0%, var(--bg-light) 100%);
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+        .hero-container {
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .form-group {
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
             margin-bottom: 1.5rem;
         }
 
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--text-primary);
+        .hero-badge svg {
+            width: 16px;
+            height: 16px;
         }
 
-        .form-input, .form-select {
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Download Form */
+        .download-form-wrapper {
+            background: var(--bg-white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border-light);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .url-input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .url-input-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .url-input-container svg {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: var(--text-muted);
+        }
+
+        .form-input {
             width: 100%;
-            padding: 1rem 1.25rem;
-            background: hsla(230, 20%, 20%, 0.6);
-            border: 2px solid hsla(0, 0%, 100%, 0.1);
-            border-radius: 12px;
-            color: var(--text-primary);
+            padding: 1.125rem 1.25rem 1.125rem 3.5rem;
+            background: var(--bg-light);
+            border: 2px solid var(--border-light);
+            border-radius: 14px;
+            color: var(--text-dark);
             font-size: 1rem;
             font-family: inherit;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             outline: none;
         }
 
-        .form-input:focus, .form-select:focus {
+        .form-input:focus {
             border-color: var(--primary);
-            background: hsla(230, 20%, 20%, 0.8);
-            box-shadow: 0 0 0 4px hsla(260, 100%, 65%, 0.1);
+            background: var(--bg-white);
+            box-shadow: 0 0 0 4px var(--primary-glow);
         }
 
         .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .btn-primary {
+            padding: 1.125rem 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px var(--primary-glow);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--primary-glow);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .form-tagline {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .form-tagline span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .form-tagline svg {
+            width: 16px;
+            height: 16px;
+            color: var(--primary);
+        }
+
+        .field-errors {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            text-align: left;
+        }
+
+        /* Messages */
+        .messages {
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .alert svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .alert-success {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 2rem;
+            background: var(--bg-white);
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .features-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .features-header p {
             color: var(--text-secondary);
+            font-size: 1.1rem;
         }
 
-        .form-select option {
-            background: hsl(230, 20%, 15%);
-        }
-
-        .form-row {
+        .features-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 600px) {
-            .form-row {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .feature-card {
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .feature-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--primary);
+        }
+
+        .feature-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Downloads Section */
+        .downloads-section {
+            padding: 4rem 2rem;
+            background: var(--bg-light);
+        }
+
+        .downloads-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .download-item {
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+
+        .download-item:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .download-content {
+            display: flex;
+            gap: 1.25rem;
+            align-items: flex-start;
+        }
+
+        .thumbnail-small {
+            width: 120px;
+            height: 68px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: var(--bg-light);
+        }
+
+        .download-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .download-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .download-title {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-dark);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 400px;
+        }
+
+        .download-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .download-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .format-badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .status-badge {
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: capitalize;
+            white-space: nowrap;
+        }
+
+        .status-pending, .status-fetching {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-downloading {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-failed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .download-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-success {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--error);
+            color: var(--error);
+            background: #fef2f2;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: #fef2f2;
+            border-radius: 8px;
+            border-left: 3px solid var(--error);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--bg-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .empty-state-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--text-muted);
+        }
+
+        .empty-state h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-light);
+            padding: 3rem 2rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .footer-brand .logo-icon {
+            width: 36px;
+            height: 36px;
+        }
+
+        .footer-brand .logo-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .footer-social a:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .footer-social svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .footer-bottom {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-light);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Format Options (Hidden by default, shown via JS) */
+        .format-options {
+            display: none;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .format-options.visible {
+            display: block;
+        }
+
+        .format-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .format-row {
                 grid-template-columns: 1fr;
             }
         }
 
         .format-selector {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 0.75rem;
         }
 
         .format-option {
@@ -184,305 +789,88 @@
             align-items: center;
             gap: 0.5rem;
             padding: 1rem;
-            background: hsla(230, 20%, 20%, 0.6);
-            border: 2px solid hsla(0, 0%, 100%, 0.1);
+            background: var(--bg-light);
+            border: 2px solid var(--border-light);
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .format-option input:checked + label {
             border-color: var(--primary);
-            background: hsla(260, 100%, 65%, 0.1);
+            background: var(--primary-light);
         }
 
         .format-option label:hover {
-            border-color: hsla(0, 0%, 100%, 0.3);
+            border-color: var(--primary);
         }
 
-        .format-icon {
-            width: 28px;
-            height: 28px;
-        }
-
-        .format-name {
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .btn {
-            padding: 1rem 2.5rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px hsla(260, 100%, 65%, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, hsla(0, 0%, 100%, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px hsla(260, 100%, 65%, 0.4);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .messages {
-            margin-bottom: 1.5rem;
-        }
-
-        .alert {
-            padding: 1rem 1.25rem;
-            border-radius: 10px;
-            margin-bottom: 0.75rem;
-            animation: fadeInUp 0.3s ease;
-        }
-
-        .alert-success {
-            background: hsla(140, 70%, 55%, 0.15);
-            border: 1px solid var(--success);
-            color: var(--success);
-        }
-
-        .alert-error {
-            background: hsla(0, 70%, 60%, 0.15);
-            border: 1px solid var(--error);
-            color: var(--error);
-        }
-
-        .field-errors {
-            color: var(--error);
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-        }
-
-        .downloads-section {
-            margin-top: 3rem;
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: var(--text-primary);
-        }
-
-        .download-item {
-            background: hsla(230, 20%, 18%, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid hsla(0, 0%, 100%, 0.05);
-            transition: all 0.3s ease;
-            animation: slideIn 0.4s ease;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .download-item:hover {
-            background: hsla(230, 20%, 20%, 0.8);
-            border-color: hsla(0, 0%, 100%, 0.1);
-        }
-
-        .download-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.75rem;
-            gap: 1rem;
-        }
-
-        .download-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .download-title {
-            font-weight: 600;
-            font-size: 1.05rem;
-            color: var(--text-primary);
-            margin-bottom: 0.25rem;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .download-meta {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .download-meta span {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .format-badge {
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            background: hsla(260, 100%, 65%, 0.2);
+        .format-option svg {
+            width: 24px;
+            height: 24px;
             color: var(--primary);
         }
 
-        .status-badge {
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
+        .format-option .format-name {
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
+            font-size: 0.9rem;
+            color: var(--text-dark);
         }
 
-        .status-pending, .status-fetching {
-            background: hsla(45, 100%, 60%, 0.2);
-            color: var(--warning);
-        }
-
-        .status-downloading {
-            background: hsla(200, 100%, 60%, 0.2);
-            color: var(--secondary);
-        }
-
-        .status-completed {
-            background: hsla(140, 70%, 55%, 0.2);
-            color: var(--success);
-        }
-
-        .status-failed {
-            background: hsla(0, 70%, 60%, 0.2);
-            color: var(--error);
-        }
-
-        .progress-bar {
+        .form-select {
             width: 100%;
-            height: 8px;
-            background: hsla(0, 0%, 100%, 0.1);
+            padding: 0.875rem 1rem;
+            background: var(--bg-light);
+            border: 2px solid var(--border-light);
             border-radius: 10px;
-            overflow: hidden;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-select:focus {
+            border-color: var(--primary);
+            background: var(--bg-white);
+        }
+
+        .form-label {
+            display: block;
             margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            font-size: 0.9rem;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 10px;
-            transition: width 0.3s ease;
-            box-shadow: 0 0 10px var(--primary);
-        }
-
-        .progress-text {
+        .quality-note {
             font-size: 0.85rem;
             color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-
-        .download-actions {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .btn-small {
-            padding: 0.5rem 1.25rem;
-            font-size: 0.85rem;
-            border-radius: 8px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, var(--success), hsl(140, 70%, 45%));
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, var(--error), hsl(0, 70%, 50%));
-        }
-
-        .error-message {
-            color: var(--error);
-            font-size: 0.85rem;
             margin-top: 0.5rem;
-            padding: 0.75rem;
-            background: hsla(0, 70%, 60%, 0.1);
-            border-radius: 8px;
-            border-left: 3px solid var(--error);
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: var(--text-secondary);
-        }
-
-        .empty-state svg {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        .thumbnail-small {
-            width: 80px;
-            height: 45px;
-            border-radius: 6px;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-
-        .download-content {
-            display: flex;
-            gap: 1rem;
-            align-items: flex-start;
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
+            .hero h1 {
+                font-size: 2.5rem;
             }
 
-            .card {
-                padding: 1.5rem;
+            .hero-subtitle {
+                font-size: 1.1rem;
             }
 
-            .download-header {
+            .url-input-group {
                 flex-direction: column;
-                align-items: flex-start;
+            }
+
+            .btn-primary {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-links {
+                display: none;
             }
 
             .download-content {
@@ -495,154 +883,376 @@
                 aspect-ratio: 16/9;
             }
 
-            .format-selector {
+            .download-title {
+                max-width: 100%;
+            }
+
+            .footer-content {
                 flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>YouTube Downloader</h1>
-            <p class="subtitle">Download videos as MP4 or extract audio as MP3</p>
-        </header>
-
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-            {% endfor %}
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="{% url 'web_downloader:index' %}" class="logo">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <span class="logo-text">Di<span>tronics</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#downloads">Downloads</a></li>
+                <li><a href="#support">Support</a></li>
+            </ul>
         </div>
-        {% endif %}
+    </nav>
 
-        <div class="card">
-            <form method="post" id="downloadForm">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="{{ form.url.id_for_label }}">YouTube URL</label>
-                    {{ form.url }}
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Fast & Secure Downloads
+            </div>
+            <h1>Download YouTube Videos <span>Instantly</span></h1>
+            <p class="hero-subtitle">
+                The fastest way to save your favorite videos. High quality MP4 and MP3 downloads with no watermarks.
+            </p>
+
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {% if message.tags == 'success' %}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {% endif %}
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="download-form-wrapper">
+                <form method="post" id="downloadForm">
+                    {% csrf_token %}
+                    <div class="url-input-group">
+                        <div class="url-input-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                            <input type="url" name="url" class="form-input" 
+                                   placeholder="Paste YouTube link here..." 
+                                   value="{{ form.url.value|default:'' }}"
+                                   required>
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            Download
+                        </button>
+                    </div>
                     {% if form.url.errors %}
                     <div class="field-errors">
                         {% for error in form.url.errors %}{{ error }}{% endfor %}
                     </div>
                     {% endif %}
-                </div>
 
-                <div class="form-group">
-                    <label>Format</label>
-                    <div class="format-selector">
-                        <div class="format-option">
-                            <input type="radio" name="format_type" id="format_mp4" value="mp4" 
-                                   {% if form.format_type.value == 'mp4' or not form.format_type.value %}checked{% endif %}>
-                            <label for="format_mp4">
-                                <svg class="format-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                </svg>
-                                <span class="format-name">MP4 Video</span>
-                            </label>
-                        </div>
-                        <div class="format-option">
-                            <input type="radio" name="format_type" id="format_mp3" value="mp3"
-                                   {% if form.format_type.value == 'mp3' %}checked{% endif %}>
-                            <label for="format_mp3">
-                                <svg class="format-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                                </svg>
-                                <span class="format-name">MP3 Audio</span>
-                            </label>
+                    <!-- Format Options (shown when URL is entered) -->
+                    <div class="format-options" id="formatOptions">
+                        <div class="format-row">
+                            <div>
+                                <label class="form-label">Format</label>
+                                <div class="format-selector">
+                                    <div class="format-option">
+                                        <input type="radio" name="format_type" id="format_mp4" value="mp4" 
+                                               {% if form.format_type.value == 'mp4' or not form.format_type.value %}checked{% endif %}>
+                                        <label for="format_mp4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                            </svg>
+                                            <span class="format-name">MP4</span>
+                                        </label>
+                                    </div>
+                                    <div class="format-option">
+                                        <input type="radio" name="format_type" id="format_mp3" value="mp3"
+                                               {% if form.format_type.value == 'mp3' %}checked{% endif %}>
+                                        <label for="format_mp3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                                            </svg>
+                                            <span class="format-name">MP3</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="quality-group">
+                                <label class="form-label" for="id_quality">Quality</label>
+                                <select name="quality" id="id_quality" class="form-select">
+                                    <option value="best">Best Quality</option>
+                                    <option value="1080p">1080p (Full HD)</option>
+                                    <option value="720p" selected>720p (HD)</option>
+                                    <option value="480p">480p (SD)</option>
+                                    <option value="worst">Lowest Quality</option>
+                                </select>
+                                <p class="quality-note" id="mp3-note" style="display: none;">
+                                    Audio will be extracted at the best available quality.
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="form-group" id="quality-group">
-                    <label for="{{ form.quality.id_for_label }}">Video Quality</label>
-                    {{ form.quality }}
-                    <p class="quality-note" id="mp3-note" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem; display: none;">
-                        Audio will be extracted at the best available quality.
-                    </p>
-                </div>
-
-                <button type="submit" class="btn">Start Download</button>
-            </form>
+                    <div class="form-tagline">
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                            Fast processing
+                        </span>
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                            Secure
+                        </span>
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            No watermark
+                        </span>
+                    </div>
+                </form>
+            </div>
         </div>
+    </section>
 
-        <div class="downloads-section">
-            <h2 class="section-title">Recent Downloads</h2>
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <div class="features-header">
+                <h2>Why Choose Ditronics?</h2>
+                <p>Built for speed, designed for simplicity</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h3>High-Speed Processing</h3>
+                    <p>Lightning-fast downloads with optimized servers and parallel processing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                        </svg>
+                    </div>
+                    <h3>Multiple Formats</h3>
+                    <p>Download in MP4, MP3, and various quality levels from 480p to Full HD.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15.536a5 5 0 001.414 1.414m2.828-9.9a9 9 0 012.828-2.828" />
+                        </svg>
+                    </div>
+                    <h3>Audio/Video Options</h3>
+                    <p>Extract audio only or download full video with your preferred settings.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Fully responsive design that works perfectly on any device or screen size.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Downloads Section -->
+    <section class="downloads-section" id="downloads">
+        <div class="downloads-container">
+            <div class="section-header">
+                <h2 class="section-title">Recent Downloads</h2>
+            </div>
             
             {% if downloads %}
                 {% for download in downloads %}
                 <div class="download-item" data-download-id="{{ download.id }}">
-                    <div class="download-header">
+                    <div class="download-content">
+                        {% if download.thumbnail %}
+                        <img src="{{ download.thumbnail }}" alt="{{ download.title }}" class="thumbnail-small">
+                        {% else %}
+                        <div class="thumbnail-small" style="display: flex; align-items: center; justify-content: center;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--text-muted);">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        {% endif %}
                         <div class="download-info">
-                            <div class="download-title">
-                                {{ download.title|default:"Processing..." }}
+                            <div class="download-header">
+                                <div class="download-title">{{ download.title|default:"Processing..." }}</div>
+                                <span class="status-badge status-{{ download.status }}">
+                                    {{ download.get_status_display }}
+                                </span>
                             </div>
                             <div class="download-meta">
                                 <span class="format-badge">{{ download.format_type|upper }}</span>
                                 {% if download.duration %}
-                                <span>{{ download.duration_formatted }}</span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    {{ download.duration_formatted }}
+                                </span>
                                 {% endif %}
                                 {% if download.file_size_formatted %}
-                                <span>{{ download.file_size_formatted }}</span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    {{ download.file_size_formatted }}
+                                </span>
                                 {% endif %}
                             </div>
+                            
+                            {% if download.status == 'downloading' or download.status == 'pending' or download.status == 'fetching' %}
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ download.progress }}%"></div>
+                            </div>
+                            <div class="progress-text">{{ download.progress }}% complete</div>
+                            {% endif %}
+                            
+                            {% if download.error_message %}
+                            <div class="error-message">{{ download.error_message }}</div>
+                            {% endif %}
+                            
+                            <div class="download-actions">
+                                {% if download.status == 'completed' and download.file_path %}
+                                <a href="{% url 'web_downloader:download_file' download.id %}" class="btn-small btn-success">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                    Download
+                                </a>
+                                {% endif %}
+                                <form method="post" action="{% url 'web_downloader:delete_download' download.id %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-small btn-outline" onclick="return confirm('Delete this download?')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                        <span class="status-badge status-{{ download.status }}">
-                            {{ download.get_status_display }}
-                        </span>
-                    </div>
-                    
-                    {% if download.status == 'downloading' or download.status == 'pending' or download.status == 'fetching' %}
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: {{ download.progress }}%"></div>
-                    </div>
-                    <div class="progress-text">
-                        {{ download.progress }}% complete
-                    </div>
-                    {% endif %}
-                    
-                    {% if download.error_message %}
-                    <div class="error-message">
-                        {{ download.error_message }}
-                    </div>
-                    {% endif %}
-                    
-                    <div class="download-actions">
-                        {% if download.status == 'completed' and download.file_path %}
-                        <a href="{% url 'web_downloader:download_file' download.id %}" class="btn btn-small btn-success">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                            </svg>
-                            Download
-                        </a>
-                        {% endif %}
-                        <form method="post" action="{% url 'web_downloader:delete_download' download.id %}" style="display: inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-small btn-danger" onclick="return confirm('Delete this download?')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                                Delete
-                            </button>
-                        </form>
                     </div>
                 </div>
                 {% endfor %}
             {% else %}
                 <div class="empty-state">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
-                    </svg>
-                    <p>No downloads yet. Start by entering a YouTube URL above!</p>
+                    <div class="empty-state-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                        </svg>
+                    </div>
+                    <h3>No downloads yet</h3>
+                    <p>Paste a YouTube URL above to get started!</p>
                 </div>
             {% endif %}
         </div>
-    </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="support">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <span class="footer-text">Built by Ditronics</span>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+                <div class="footer-social">
+                    <a href="#" aria-label="Twitter">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="GitHub">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 Ditronics. All rights reserved. Fast, secure, no watermark.</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
+        // Show format options when URL is entered
+        const urlInput = document.querySelector('input[name="url"]');
+        const formatOptions = document.getElementById('formatOptions');
+        
+        function toggleFormatOptions() {
+            if (urlInput.value.trim()) {
+                formatOptions.classList.add('visible');
+            } else {
+                formatOptions.classList.remove('visible');
+            }
+        }
+        
+        urlInput.addEventListener('input', toggleFormatOptions);
+        urlInput.addEventListener('paste', () => setTimeout(toggleFormatOptions, 0));
+        
+        // Initial check
+        toggleFormatOptions();
+
         // Handle format selection and quality visibility
         const mp4Radio = document.getElementById('format_mp4');
         const mp3Radio = document.getElementById('format_mp3');
@@ -723,6 +1333,17 @@
         
         // Initial update
         updateProgress();
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
     </script>
 </body>
 </html>
