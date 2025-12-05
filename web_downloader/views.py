@@ -124,12 +124,21 @@ def get_video_info(request):
         return JsonResponse({'error': error_message}, status=400)
     
     downloader = YouTubeDownloader()
-    video_info = downloader.get_video_info(url)
     
-    if video_info:
-        return JsonResponse(video_info)
+    # Check if it's a playlist URL
+    if YouTubeDownloader.is_playlist_url(url):
+        playlist_info = downloader.get_playlist_info(url)
+        if playlist_info:
+            return JsonResponse(playlist_info)
+        else:
+            return JsonResponse({'error': 'Could not fetch playlist information'}, status=404)
     else:
-        return JsonResponse({'error': 'Could not fetch video information'}, status=404)
+        video_info = downloader.get_video_info(url)
+        if video_info:
+            video_info['is_playlist'] = False
+            return JsonResponse(video_info)
+        else:
+            return JsonResponse({'error': 'Could not fetch video information'}, status=404)
 
 
 @require_http_methods(["GET"])

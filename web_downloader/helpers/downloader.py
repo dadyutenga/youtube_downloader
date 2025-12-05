@@ -101,6 +101,140 @@ class YouTubeDownloader:
                 return match.group(1)
         return None
 
+    @classmethod
+    def extract_playlist_id(cls, url: str) -> Optional[str]:
+        """
+        Extract the playlist ID from a YouTube URL.
+
+        Args:
+            url: YouTube URL
+
+        Returns:
+            Playlist ID or None if not found
+        """
+        match = re.search(r'[?&]list=([a-zA-Z0-9_-]+)', url)
+        if match:
+            return match.group(1)
+        return None
+
+    @classmethod
+    def is_playlist_url(cls, url: str) -> bool:
+        """
+        Check if the URL is a playlist URL.
+
+        Args:
+            url: YouTube URL
+
+        Returns:
+            True if it's a playlist URL
+        """
+        return cls.extract_playlist_id(url) is not None
+
+    def get_playlist_info(self, url: str) -> Optional[Dict[str, Any]]:
+        """
+        Fetch metadata for a YouTube playlist without downloading.
+
+        Args:
+            url: YouTube playlist URL
+
+        Returns:
+            Dictionary with playlist metadata or None on failure
+        """
+        cmd = [
+            sys.executable, '-m', 'yt_dlp',
+            '--dump-json',
+            '--flat-playlist',
+            '--no-download',
+            '--no-warnings',
+            '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            url
+        ]
+
+        try:
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=180  # Playlists can take longer
+            )
+
+            if result.returncode == 0 and result.stdout.strip():
+                lines = result.stdout.strip().split('\n')
+                videos = []
+                playlist_title = "Unknown Playlist"
+                playlist_uploader = "Unknown"
+                playlist_id = self.extract_playlist_id(url)
+                
+                for line in lines:
+                    try:
+                        data = json.loads(line)
+                        # Check if this is playlist metadata or video entry
+                        if data.get('_type') == 'playlist':
+                            playlist_title = data.get('title', playlist_title)
+                            playlist_uploader = data.get('uploader', playlist_uploader)
+                        else:
+                            # This is a video entry
+                            video_id = data.get('id', '')
+                            duration = data.get('duration', 0) or 0
+                            
+                            # Format duration
+                            if duration:
+                                hours, remainder = divmod(int(duration), 3600)
+                                minutes, seconds = divmod(remainder, 60)
+                                if hours:
+                                    duration_formatted = f"{hours}:{minutes:02d}:{seconds:02d}"
+                                else:
+                                    duration_formatted = f"{minutes}:{seconds:02d}"
+                            else:
+                                duration_formatted = "N/A"
+                            
+                            videos.append({
+                                'id': video_id,
+                                'title': data.get('title', 'Unknown'),
+                                'url': f"https://www.youtube.com/watch?v={video_id}",
+                                'thumbnail': data.get('thumbnail') or f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg",
+                                'duration': duration,
+                                'duration_formatted': duration_formatted,
+                                'uploader': data.get('uploader', ''),
+                            })
+                    except json.JSONDecodeError:
+                        continue
+                
+                if videos:
+                    # Calculate total duration
+                    total_duration = sum(v.get('duration', 0) or 0 for v in videos)
+                    hours, remainder = divmod(int(total_duration), 3600)
+                    minutes, seconds = divmod(remainder, 60)
+                    if hours:
+                        total_duration_formatted = f"{hours}:{minutes:02d}:{seconds:02d}"
+                    else:
+                        total_duration_formatted = f"{minutes}:{seconds:02d}"
+                    
+                    return {
+                        'is_playlist': True,
+                        'playlist_id': playlist_id,
+                        'title': playlist_title,
+                        'uploader': playlist_uploader,
+                        'video_count': len(videos),
+                        'total_duration': total_duration,
+                        'total_duration_formatted': total_duration_formatted,
+                        'thumbnail': videos[0]['thumbnail'] if videos else None,
+                        'videos': videos,
+                    }
+                else:
+                    logger.error("No videos found in playlist")
+                    return None
+            else:
+                logger.error(f"Failed to fetch playlist info: {result.stderr}")
+                return None
+
+        except subprocess.TimeoutExpired:
+            logger.error("Timeout while fetching playlist info")
+            return None
+        except Exception as e:
+            logger.error(f"Error fetching playlist info: {e}")
+            return None
+
     def get_video_info(self, url: str) -> Optional[Dict[str, Any]]:
         """
         Fetch metadata for a YouTube video without downloading.
