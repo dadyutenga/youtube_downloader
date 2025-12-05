@@ -8,7 +8,7 @@ urlpatterns = [
     path('preview/', views.preview, name='preview'),
     path('progress/<int:download_id>/', views.get_progress, name='get_progress'),
     path('download/<int:download_id>/', views.download_file, name='download_file'),
-    path('delete/<int:download_id>/', views.delete_download, name='delete_delete'),
+    path('delete/<int:download_id>/', views.delete_download, name='delete_download'),
     path('api/video-info/', views.get_video_info, name='get_video_info'),
     path('error/', views.error_page, name='error'),
 ]
