@@ -170,5 +170,9 @@ if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
+    # Only set cookie secure if using HTTPS
+    # CSRF_COOKIE_SECURE = True
+    # SESSION_COOKIE_SECURE = True
+
+# CSRF trusted origins for production (set via environment variable)
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'http://localhost:8090,http://127.0.0.1:8090').split(',')

@@ -1,0 +1,53 @@
+services:
+  youtube-downloader:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ditronics-youtube-downloader
+    restart: unless-stopped
+    
+    # IMPORTANT: Use host network mode to respect UFW firewall rules
+    # This ensures traffic goes through the host's firewall instead of bypassing it
+    network_mode: "host"
+    
+    # Alternative: If you need isolated networking, use ports with 127.0.0.1
+    # This binds only to localhost, then use a reverse proxy (nginx) with UFW
+    # ports:
+    #   - "127.0.0.1:8090:8090"
+    
+    environment:
+      - DJANGO_DEBUG=False
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY:-your-super-secret-key-change-in-production}
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,${ALLOWED_HOST:-}
+      - CSRF_TRUSTED_ORIGINS=http://localhost:8090,http://127.0.0.1:8090,${CSRF_TRUSTED_ORIGINS:-}
+      - TZ=UTC
+    
+    volumes:
+      # Persist downloads (will be cleaned daily by cron)
+      - downloads_data:/app/downloads
+      # Persist database
+      - db_data:/app/db.sqlite3
+      # Logs
+      - logs_data:/app/logs
+    
+    # Resource limits for slim container
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8090/')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  downloads_data:
+  db_data:
+  logs_data:

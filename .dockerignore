@@ -1,0 +1,62 @@
+# Docker
+.git
+.gitignore
+.dockerignore
+Dockerfile
+docker-compose*.yml
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info
+.eggs
+*.manifest
+*.spec
+
+# Virtual Environment
+myenv/
+venv/
+env/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Local development
+*.log
+*.sqlite3
+db.sqlite3
+
+# Downloads (will be created fresh)
+downloads/
+
+# Static files (will be collected during build)
+staticfiles/
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+.env.*
+*.pem
+*.key
