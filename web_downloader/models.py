@@ -26,6 +26,9 @@ class VideoDownload(models.Model):
         ('worst', 'Lowest Quality'),
     ]
     
+    # Session ID to isolate users
+    session_id = models.CharField(max_length=64, db_index=True, default='legacy')
+    
     url = models.URLField(max_length=500)
     title = models.CharField(max_length=500, blank=True)
     thumbnail = models.URLField(max_length=500, blank=True)

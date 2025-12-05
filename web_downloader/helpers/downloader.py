@@ -116,6 +116,7 @@ class YouTubeDownloader:
             '--dump-json',
             '--no-download',
             '--no-warnings',
+            '--no-playlist',
             '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
             '--extractor-args', 'youtube:player_client=android,web',
             url
@@ -126,18 +127,30 @@ class YouTubeDownloader:
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=60
+                timeout=120
             )
 
             if result.returncode == 0 and result.stdout.strip():
                 data = json.loads(result.stdout.strip().split('\n')[0])
+                
+                # Format duration for display
+                duration = data.get('duration', 0) or 0
+                hours, remainder = divmod(int(duration), 3600)
+                minutes, seconds = divmod(remainder, 60)
+                if hours:
+                    duration_formatted = f"{hours}:{minutes:02d}:{seconds:02d}"
+                else:
+                    duration_formatted = f"{minutes}:{seconds:02d}"
+                
                 return {
                     'title': data.get('title', 'Unknown'),
                     'thumbnail': data.get('thumbnail'),
-                    'duration': data.get('duration', 0),
+                    'duration': duration,
                     'duration_string': data.get('duration_string', '0:00'),
+                    'duration_formatted': duration_formatted,
                     'description': data.get('description', ''),
                     'uploader': data.get('uploader', 'Unknown'),
+                    'channel': data.get('channel') or data.get('uploader', 'Unknown'),
                     'view_count': data.get('view_count', 0),
                     'upload_date': data.get('upload_date', ''),
                     'webpage_url': data.get('webpage_url', url),

@@ -4,6 +4,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from pathlib import Path
 import logging
+import uuid
 from .models import VideoDownload
 from .forms import DownloadForm
 from .utils import start_download
@@ -12,12 +13,23 @@ from .helpers.downloader import YouTubeDownloader
 logger = logging.getLogger(__name__)
 
 
+def get_or_create_session_id(request):
+    """Get or create a unique session ID for the user"""
+    if 'downloader_session_id' not in request.session:
+        request.session['downloader_session_id'] = str(uuid.uuid4())
+    return request.session['downloader_session_id']
+
+
 def index(request):
     """Main page with download form and recent downloads"""
+    session_id = get_or_create_session_id(request)
+    
     if request.method == 'POST':
         form = DownloadForm(request.POST)
         if form.is_valid():
-            download = form.save()
+            download = form.save(commit=False)
+            download.session_id = session_id
+            download.save()
             # Start download in background thread
             start_download(download.id)
             messages.success(request, 'Download started successfully!')
@@ -28,12 +40,13 @@ def index(request):
     else:
         form = DownloadForm()
     
-    # Get recent downloads
-    recent_downloads = VideoDownload.objects.all()[:20]
+    # Get only this user's downloads
+    recent_downloads = VideoDownload.objects.filter(session_id=session_id)[:20]
     
     context = {
         'form': form,
         'downloads': recent_downloads,
+        'session_id': session_id[:8],  # Show first 8 chars for display
     }
     return render(request, 'web_downloader/index.html', context)
 
@@ -78,8 +91,10 @@ def preview(request):
 @require_http_methods(["GET"])
 def get_progress(request, download_id):
     """API endpoint to get download progress"""
+    session_id = get_or_create_session_id(request)
     try:
-        download = VideoDownload.objects.get(id=download_id)
+        # Only allow access to user's own downloads
+        download = VideoDownload.objects.get(id=download_id, session_id=session_id)
         data = {
             'id': download.id,
             'title': download.title or 'Processing...',
@@ -120,7 +135,9 @@ def get_video_info(request):
 @require_http_methods(["GET"])
 def download_file(request, download_id):
     """Serve the downloaded file to the user"""
-    download = get_object_or_404(VideoDownload, id=download_id)
+    session_id = get_or_create_session_id(request)
+    # Only allow access to user's own downloads
+    download = get_object_or_404(VideoDownload, id=download_id, session_id=session_id)
     
     if not download.file_path or download.status != 'completed':
         raise Http404("File not available")
@@ -140,7 +157,9 @@ def download_file(request, download_id):
 @require_http_methods(["POST"])
 def delete_download(request, download_id):
     """Delete a download record and optionally its file"""
-    download = get_object_or_404(VideoDownload, id=download_id)
+    session_id = get_or_create_session_id(request)
+    # Only allow deletion of user's own downloads
+    download = get_object_or_404(VideoDownload, id=download_id, session_id=session_id)
     
     # Delete the file if it exists
     if download.file_path:
@@ -152,6 +171,11 @@ def delete_download(request, download_id):
                 logger.error(f"Error deleting file: {e}")
     
     download.delete()
+    
+    # Check if this is an AJAX request
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'success': True, 'message': 'Download deleted successfully!'})
+    
     messages.success(request, 'Download deleted successfully!')
     return redirect('web_downloader:index')
 
