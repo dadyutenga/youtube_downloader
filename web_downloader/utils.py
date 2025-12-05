@@ -1,15 +1,17 @@
 """
 Utility functions for downloading videos using yt-dlp
-Adapted from playlist_downloader.py
+Uses the helpers/downloader.py module for core functionality
 """
 import os
-import sys
-import subprocess
 import threading
+import logging
 from pathlib import Path
 from django.conf import settings
 from django.utils import timezone
 from .models import VideoDownload
+from .helpers.downloader import YouTubeDownloader
+
+logger = logging.getLogger(__name__)
 
 
 def get_download_dir():
@@ -26,94 +28,76 @@ def download_video_thread(download_id):
     """
     try:
         download = VideoDownload.objects.get(id=download_id)
+        download.status = 'fetching'
+        download.save()
+        
+        output_dir = get_download_dir()
+        downloader = YouTubeDownloader(output_dir=str(output_dir))
+        
+        # Fetch video info first
+        video_info = downloader.get_video_info(download.url)
+        if video_info:
+            download.title = video_info.get('title', '')[:500]
+            download.thumbnail = video_info.get('thumbnail', '')[:500] if video_info.get('thumbnail') else ''
+            download.duration = video_info.get('duration', 0) or 0
+            download.uploader = video_info.get('uploader', '')[:200] if video_info.get('uploader') else ''
+            download.save()
+        
         download.status = 'downloading'
         download.save()
         
-        quality_formats = {
-            'best': 'bestvideo+bestaudio/best',
-            '1080p': 'bestvideo[height<=1080]+bestaudio/best[height<=1080]',
-            '720p': 'bestvideo[height<=720]+bestaudio/best[height<=720]',
-            '480p': 'bestvideo[height<=480]+bestaudio/best[height<=480]',
-            'worst': 'worstvideo+worstaudio/worst'
-        }
+        def progress_callback(percent, title):
+            """Update download progress in database"""
+            try:
+                dl = VideoDownload.objects.get(id=download_id)
+                dl.progress = percent
+                if title and not dl.title:
+                    dl.title = title[:500]
+                dl.save()
+            except Exception as e:
+                logger.error(f"Error updating progress: {e}")
         
-        format_string = quality_formats.get(download.quality, quality_formats['best'])
-        output_dir = get_download_dir()
-        output_template = str(output_dir / '%(title)s.%(ext)s')
+        # Perform the download based on format type
+        if download.format_type == 'mp3':
+            success, message, file_path = downloader.download_audio(
+                download.url,
+                progress_callback=progress_callback
+            )
+        else:
+            success, message, file_path = downloader.download_video(
+                download.url,
+                quality=download.quality,
+                progress_callback=progress_callback
+            )
         
-        cmd = [
-            sys.executable,
-            '-m',
-            'yt_dlp',
-            '-f', format_string,
-            '--merge-output-format', 'mp4',
-            '-o', output_template,
-            '--newline',
-            '--progress',
-            '--restrict-filenames',
-            '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-            '--extractor-args', 'youtube:player_client=android,web',
-            '--no-check-certificate',
-            download.url
-        ]
-        
-        # Run the download process
-        process = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            bufsize=1
-        )
-        
-        current_title = ""
-        for line in process.stdout:
-            line = line.strip()
-            
-            # Extract title from output
-            if '[download]' in line and 'Destination:' in line:
-                dest = line.split('Destination:')[-1].strip()
-                current_title = Path(dest).stem
-                download.title = current_title
-                download.save()
-            
-            # Extract progress percentage
-            elif '[download]' in line and '%' in line:
-                try:
-                    percent_str = line.split('%')[0].split()[-1]
-                    percent = float(percent_str)
-                    download.progress = int(percent)
-                    download.save()
-                except (ValueError, IndexError):
-                    pass
-        
-        process.wait()
-        
-        if process.returncode == 0:
-            # Find the downloaded file
-            if current_title:
-                possible_files = list(output_dir.glob(f"{current_title}.*"))
-                if possible_files:
-                    download.file_path = str(possible_files[0])
-            
+        if success and file_path:
+            download.file_path = str(file_path)
             download.status = 'completed'
             download.progress = 100
             download.completed_at = timezone.now()
+            
+            # Get file size
+            try:
+                download.file_size = Path(file_path).stat().st_size
+            except Exception:
+                pass
+            
             download.save()
         else:
             download.status = 'failed'
-            download.error_message = 'Download process failed'
+            download.error_message = message or 'Download failed'
             download.save()
             
     except VideoDownload.DoesNotExist:
-        pass
+        logger.error(f"Download {download_id} not found")
     except Exception as e:
+        logger.exception(f"Error in download thread: {e}")
         try:
             download = VideoDownload.objects.get(id=download_id)
             download.status = 'failed'
             download.error_message = str(e)
             download.save()
-        except:
+        except Exception:
             pass
 
 
