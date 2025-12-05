@@ -18,8 +18,8 @@ services:
     environment:
       - DJANGO_DEBUG=False
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY:-your-super-secret-key-change-in-production}
-      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,${ALLOWED_HOST:-}
-      - CSRF_TRUSTED_ORIGINS=http://localhost:8090,http://127.0.0.1:8090,${CSRF_TRUSTED_ORIGINS:-}
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,youtube.ditronics.co.tz
+      - CSRF_TRUSTED_ORIGINS=http://localhost:8090,http://127.0.0.1:8090,https://youtube.ditronics.co.tz
       - TZ=UTC
     
     volumes:
