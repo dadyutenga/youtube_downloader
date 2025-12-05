@@ -77,10 +77,12 @@ WSGI_APPLICATION = 'youtube_downloader.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Use /app/data directory in Docker, or BASE_DIR locally
+DB_DIR = os.environ.get('DB_DIR', str(BASE_DIR))
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(DB_DIR, 'db.sqlite3'),
     }
 }
 

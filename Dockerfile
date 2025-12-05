@@ -31,7 +31,8 @@ LABEL version="1.0"
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/opt/venv/bin:$PATH" \
-    DJANGO_SETTINGS_MODULE=youtube_downloader.settings
+    DJANGO_SETTINGS_MODULE=youtube_downloader.settings \
+    DB_DIR=/app/data
 
 WORKDIR /app
 
@@ -53,7 +54,7 @@ RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 COPY --chown=appuser:appgroup . .
 
 # Create necessary directories
-RUN mkdir -p /app/downloads /app/staticfiles /app/logs && \
+RUN mkdir -p /app/downloads /app/staticfiles /app/logs /app/data && \
     chown -R appuser:appgroup /app
 
 # Setup cron job for daily cleanup of downloads folder

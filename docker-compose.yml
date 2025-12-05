@@ -25,8 +25,8 @@ services:
     volumes:
       # Persist downloads (will be cleaned daily by cron)
       - downloads_data:/app/downloads
-      # Persist database
-      - db_data:/app/db.sqlite3
+      # Persist database (mounted as directory, db.sqlite3 will be inside)
+      - db_data:/app/data
       # Logs
       - logs_data:/app/logs
     
