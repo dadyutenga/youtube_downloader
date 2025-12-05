@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ditronics YouTube Downloader - Fast & Secure Video Downloads</title>
+    <title>Ditronics YouTube Metadata Fetcher - Fast, Isolated & Parallel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -18,7 +18,7 @@
             --primary: #2ee6c8;
             --primary-dark: #26c9ad;
             --primary-light: #e8fdf9;
-            --primary-glow: rgba(46, 230, 200, 0.3);
+            --primary-glow: rgba(46, 230, 200, 0.25);
             --bg-white: #ffffff;
             --bg-light: #fafbfc;
             --text-dark: #1a1a2e;
@@ -29,10 +29,12 @@
             --success: #10b981;
             --error: #ef4444;
             --warning: #f59e0b;
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --info: #3b82f6;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
             --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
+            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         body {
@@ -51,12 +53,13 @@
             top: 0;
             z-index: 100;
             border-bottom: 1px solid var(--border-lighter);
+            backdrop-filter: blur(10px);
         }
 
         .navbar-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 1rem 2rem;
+            padding: 1.25rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -70,14 +73,14 @@
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            border-radius: 10px;
+            border-radius: 11px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 14px var(--primary-glow);
+            box-shadow: 0 4px 16px var(--primary-glow);
         }
 
         .logo-icon svg {
@@ -88,18 +91,28 @@
 
         .logo-text {
             font-size: 1.5rem;
-            font-weight: 700;
+            font-weight: 800;
             color: var(--text-dark);
+            letter-spacing: -0.02em;
         }
 
         .logo-text span {
             color: var(--primary);
         }
 
+        .logo-subtitle {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: -4px;
+        }
+
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 2rem;
+            gap: 2.5rem;
             list-style: none;
         }
 
@@ -109,48 +122,66 @@
             font-weight: 500;
             font-size: 0.95rem;
             transition: color 0.2s ease;
+            position: relative;
         }
 
         .nav-links a:hover {
             color: var(--primary);
         }
 
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.2s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
         /* Hero Section */
         .hero {
-            padding: 5rem 2rem;
+            padding: 4rem 2rem 3rem;
             text-align: center;
-            background: linear-gradient(180deg, var(--bg-white) 0%, var(--bg-light) 100%);
+            background: var(--bg-white);
         }
 
         .hero-container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
         .hero-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
             background: var(--primary-light);
             color: var(--primary-dark);
-            padding: 0.5rem 1rem;
+            padding: 0.6rem 1.25rem;
             border-radius: 50px;
             font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.75rem;
+            border: 1px solid rgba(46, 230, 200, 0.2);
         }
 
         .hero-badge svg {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
+            font-size: 3.75rem;
+            font-weight: 900;
             color: var(--text-dark);
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
             line-height: 1.1;
+            letter-spacing: -0.03em;
         }
 
         .hero h1 span {
@@ -164,26 +195,49 @@
             font-size: 1.25rem;
             color: var(--text-secondary);
             margin-bottom: 3rem;
-            max-width: 600px;
+            max-width: 700px;
             margin-left: auto;
             margin-right: auto;
+            font-weight: 400;
         }
 
-        /* Download Form */
-        .download-form-wrapper {
+        .hero-highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Fetch Form */
+        .fetch-form-wrapper {
             background: var(--bg-white);
-            border-radius: 20px;
-            padding: 2rem;
+            border-radius: 24px;
+            padding: 2.5rem;
             box-shadow: var(--shadow-xl);
             border: 1px solid var(--border-light);
-            max-width: 700px;
-            margin: 0 auto;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
         }
 
         .url-input-group {
             display: flex;
             gap: 1rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .url-input-container {
@@ -196,17 +250,17 @@
             left: 1.25rem;
             top: 50%;
             transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             color: var(--text-muted);
         }
 
         .form-input {
             width: 100%;
-            padding: 1.125rem 1.25rem 1.125rem 3.5rem;
+            padding: 1.25rem 1.25rem 1.25rem 3.75rem;
             background: var(--bg-light);
             border: 2px solid var(--border-light);
-            border-radius: 14px;
+            border-radius: 16px;
             color: var(--text-dark);
             font-size: 1rem;
             font-family: inherit;
@@ -224,54 +278,73 @@
             color: var(--text-muted);
         }
 
-        .btn-primary {
-            padding: 1.125rem 2rem;
+        .btn-fetch {
+            padding: 1.25rem 2.5rem;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
-            border-radius: 14px;
+            border-radius: 16px;
             font-size: 1rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 14px var(--primary-glow);
+            box-shadow: 0 4px 16px var(--primary-glow);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
             white-space: nowrap;
         }
 
-        .btn-primary:hover {
+        .btn-fetch:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px var(--primary-glow);
+            box-shadow: 0 6px 24px var(--primary-glow);
         }
 
-        .btn-primary:active {
+        .btn-fetch:active {
             transform: translateY(0);
         }
 
-        .btn-primary svg {
+        .btn-fetch:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-fetch svg {
             width: 20px;
             height: 20px;
         }
 
-        .form-tagline {
-            color: var(--text-muted);
-            font-size: 0.9rem;
+        .btn-fetch .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .fetch-info {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 1.5rem;
+            gap: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
             flex-wrap: wrap;
         }
 
-        .form-tagline span {
+        .fetch-info span {
             display: flex;
             align-items: center;
             gap: 0.4rem;
+            font-weight: 500;
         }
 
-        .form-tagline svg {
+        .fetch-info svg {
             width: 16px;
             height: 16px;
             color: var(--primary);
@@ -280,24 +353,397 @@
         .field-errors {
             color: var(--error);
             font-size: 0.85rem;
-            margin-top: 0.5rem;
-            text-align: left;
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: #fef2f2;
+            border-radius: 10px;
+            border-left: 3px solid var(--error);
         }
+
+        /* Metadata Card */
+        .metadata-card {
+            display: none;
+            background: var(--bg-white);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-light);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        .metadata-card.visible {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .metadata-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metadata-thumbnail {
+            width: 280px;
+            height: 158px;
+            border-radius: 16px;
+            object-fit: cover;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .metadata-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .metadata-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.75rem;
+            line-height: 1.3;
+        }
+
+        .metadata-channel {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .metadata-stats {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .metadata-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .metadata-stat svg {
+            width: 18px;
+            height: 18px;
+            color: var(--primary);
+        }
+
+        .format-selector-container {
+            margin-bottom: 2rem;
+        }
+
+        .format-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .format-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .format-option {
+            position: relative;
+        }
+
+        .format-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .format-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem 0.75rem;
+            background: var(--bg-light);
+            border: 2px solid var(--border-light);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            min-height: 90px;
+        }
+
+        .format-option input:checked + label {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        .format-option label:hover {
+            border-color: var(--primary);
+        }
+
+        .format-option .format-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .format-option .format-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .download-actions-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-prepare {
+            flex: 1;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px var(--primary-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+
+        .btn-prepare:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px var(--primary-glow);
+        }
+
+        .btn-prepare:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-prepare svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .btn-secondary {
+            padding: 1rem 1.5rem;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            border: 2px solid var(--border-light);
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        /* Parallel Tasks Panel */
+        .parallel-tasks-section {
+            padding: 3rem 2rem;
+            background: var(--bg-light);
+        }
+
+        .parallel-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title svg {
+            width: 28px;
+            height: 28px;
+            color: var(--primary);
+        }
+
+        .tasks-count {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .task-card {
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+
+        .task-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .task-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            flex: 1;
+        }
+
+        .task-status {
+            padding: 0.35rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            white-space: nowrap;
+            margin-left: 0.75rem;
+        }
+
+        .task-status.fetching {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .task-status.preparing {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .task-status.ready {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .task-status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .task-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .task-progress {
+            width: 100%;
+            height: 4px;
+            background: var(--border-lighter);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .task-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .empty-tasks {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-tasks svg {
+            width: 60px;
+            height: 60px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .empty-tasks p {
+            font-size: 1rem;
+        }
+
 
         /* Messages */
         .messages {
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto 1.5rem;
         }
 
         .alert {
             padding: 1rem 1.25rem;
-            border-radius: 12px;
+            border-radius: 14px;
             margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
             gap: 0.75rem;
             font-size: 0.95rem;
+            animation: slideIn 0.3s ease-out;
         }
 
         .alert svg {
@@ -318,6 +764,12 @@
             color: #991b1b;
         }
 
+        .alert-info {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+        }
+
         /* Features Section */
         .features {
             padding: 5rem 2rem;
@@ -325,34 +777,35 @@
         }
 
         .features-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         .features-header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 4rem;
         }
 
         .features-header h2 {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.5rem;
+            font-weight: 800;
             color: var(--text-dark);
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
         }
 
         .features-header p {
             color: var(--text-secondary);
-            font-size: 1.1rem;
+            font-size: 1.15rem;
         }
 
         .features-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
+            gap: 1.75rem;
         }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
             .features-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -366,296 +819,59 @@
 
         .feature-card {
             background: var(--bg-white);
-            border-radius: 16px;
-            padding: 2rem;
+            border-radius: 20px;
+            padding: 2.25rem;
             border: 1px solid var(--border-light);
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-card);
             transition: all 0.3s ease;
+            text-align: center;
         }
 
         .feature-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-6px);
             box-shadow: var(--shadow-lg);
             border-color: var(--primary);
         }
 
         .feature-icon {
-            width: 48px;
-            height: 48px;
+            width: 56px;
+            height: 56px;
             background: var(--primary-light);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.25rem;
-        }
-
-        .feature-icon svg {
-            width: 24px;
-            height: 24px;
-            color: var(--primary);
-        }
-
-        .feature-card h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        /* Downloads Section */
-        .downloads-section {
-            padding: 4rem 2rem;
-            background: var(--bg-light);
-        }
-
-        .downloads-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        .download-item {
-            background: var(--bg-white);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid var(--border-light);
-            box-shadow: var(--shadow-sm);
-            transition: all 0.2s ease;
-        }
-
-        .download-item:hover {
-            box-shadow: var(--shadow-md);
-            border-color: var(--primary);
-        }
-
-        .download-content {
-            display: flex;
-            gap: 1.25rem;
-            align-items: flex-start;
-        }
-
-        .thumbnail-small {
-            width: 120px;
-            height: 68px;
-            border-radius: 10px;
-            object-fit: cover;
-            flex-shrink: 0;
-            background: var(--bg-light);
-        }
-
-        .download-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .download-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .download-title {
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--text-dark);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 400px;
-        }
-
-        .download-meta {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.75rem;
-            flex-wrap: wrap;
-        }
-
-        .download-meta span {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .format-badge {
-            padding: 0.25rem 0.6rem;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            background: var(--primary-light);
-            color: var(--primary-dark);
-        }
-
-        .status-badge {
-            padding: 0.35rem 0.85rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: capitalize;
-            white-space: nowrap;
-        }
-
-        .status-pending, .status-fetching {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .status-downloading {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .status-completed {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .status-failed {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: var(--border-light);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 0.5rem;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
-            border-radius: 10px;
-            transition: width 0.3s ease;
-        }
-
-        .progress-text {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        .download-actions {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .btn-small {
-            padding: 0.5rem 1rem;
-            font-size: 0.85rem;
-            border-radius: 8px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-weight: 500;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-success {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: var(--primary-dark);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--border-light);
-            color: var(--text-secondary);
-        }
-
-        .btn-outline:hover {
-            border-color: var(--error);
-            color: var(--error);
-            background: #fef2f2;
-        }
-
-        .error-message {
-            color: var(--error);
-            font-size: 0.85rem;
-            margin-top: 0.75rem;
-            padding: 0.75rem 1rem;
-            background: #fef2f2;
-            border-radius: 8px;
-            border-left: 3px solid var(--error);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-secondary);
-        }
-
-        .empty-state-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--bg-light);
-            border-radius: 50%;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.5rem;
         }
 
-        .empty-state-icon svg {
-            width: 40px;
-            height: 40px;
-            color: var(--text-muted);
+        .feature-icon svg {
+            width: 28px;
+            height: 28px;
+            color: var(--primary);
         }
 
-        .empty-state h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
+        .feature-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
             color: var(--text-dark);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
         }
 
-        .empty-state p {
+        .feature-card p {
+            color: var(--text-secondary);
             font-size: 0.95rem;
+            line-height: 1.6;
         }
 
         /* Footer */
         .footer {
             background: var(--bg-white);
             border-top: 1px solid var(--border-light);
-            padding: 3rem 2rem;
+            padding: 3.5rem 2rem 2rem;
         }
 
         .footer-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -665,17 +881,24 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 2rem;
+            margin-bottom: 2rem;
         }
 
         .footer-brand {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-brand-logo {
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
 
         .footer-brand .logo-icon {
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
         }
 
         .footer-brand .logo-icon svg {
@@ -683,21 +906,28 @@
             height: 20px;
         }
 
-        .footer-text {
+        .footer-brand .logo-text {
+            font-size: 1.35rem;
+        }
+
+        .footer-tagline {
             color: var(--text-secondary);
             font-size: 0.9rem;
+            margin-left: 50px;
         }
 
         .footer-links {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem;
             list-style: none;
+            flex-wrap: wrap;
         }
 
         .footer-links a {
             text-decoration: none;
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            font-weight: 500;
             transition: color 0.2s ease;
         }
 
@@ -707,13 +937,13 @@
 
         .footer-social {
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .footer-social a {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
             background: var(--bg-light);
             display: flex;
             align-items: center;
@@ -725,6 +955,7 @@
         .footer-social a:hover {
             background: var(--primary-light);
             color: var(--primary);
+            transform: translateY(-2px);
         }
 
         .footer-social svg {
@@ -733,121 +964,16 @@
         }
 
         .footer-bottom {
-            margin-top: 2rem;
             padding-top: 2rem;
             border-top: 1px solid var(--border-light);
             text-align: center;
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 0.875rem;
         }
 
-        /* Format Options (Hidden by default, shown via JS) */
-        .format-options {
-            display: none;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-light);
-        }
-
-        .format-options.visible {
-            display: block;
-        }
-
-        .format-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        @media (max-width: 600px) {
-            .format-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .format-selector {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .format-option {
-            flex: 1;
-            position: relative;
-        }
-
-        .format-option input {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .format-option label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 1rem;
-            background: var(--bg-light);
-            border: 2px solid var(--border-light);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .format-option input:checked + label {
-            border-color: var(--primary);
-            background: var(--primary-light);
-        }
-
-        .format-option label:hover {
-            border-color: var(--primary);
-        }
-
-        .format-option svg {
-            width: 24px;
-            height: 24px;
-            color: var(--primary);
-        }
-
-        .format-option .format-name {
+        .footer-bottom strong {
+            color: var(--text-dark);
             font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--text-dark);
-        }
-
-        .form-select {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            background: var(--bg-light);
-            border: 2px solid var(--border-light);
-            border-radius: 10px;
-            color: var(--text-dark);
-            font-size: 0.95rem;
-            font-family: inherit;
-            cursor: pointer;
-            outline: none;
-            transition: all 0.2s ease;
-        }
-
-        .form-select:focus {
-            border-color: var(--primary);
-            background: var(--bg-white);
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--text-dark);
-            font-size: 0.9rem;
-        }
-
-        .quality-note {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-top: 0.5rem;
         }
 
         /* Responsive */
@@ -864,7 +990,7 @@
                 flex-direction: column;
             }
 
-            .btn-primary {
+            .btn-fetch {
                 width: 100%;
                 justify-content: center;
             }
@@ -873,18 +999,22 @@
                 display: none;
             }
 
-            .download-content {
+            .metadata-header {
                 flex-direction: column;
             }
 
-            .thumbnail-small {
+            .metadata-thumbnail {
                 width: 100%;
                 height: auto;
                 aspect-ratio: 16/9;
             }
 
-            .download-title {
-                max-width: 100%;
+            .format-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .download-actions-container {
+                flex-direction: column;
             }
 
             .footer-content {
@@ -896,6 +1026,20 @@
                 flex-wrap: wrap;
                 justify-content: center;
             }
+
+            .footer-tagline {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .format-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tasks-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -906,15 +1050,17 @@
             <a href="{% url 'web_downloader:index' %}" class="logo">
                 <div class="logo-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                 </div>
-                <span class="logo-text">Di<span>tronics</span></span>
+                <div>
+                    <span class="logo-text">Di<span>tronics</span></span>
+                    <div class="logo-subtitle">Metadata Fetcher</div>
+                </div>
             </a>
             <ul class="nav-links">
                 <li><a href="#features">Features</a></li>
-                <li><a href="#downloads">Downloads</a></li>
+                <li><a href="#parallel-tasks">Tasks</a></li>
                 <li><a href="#support">Support</a></li>
             </ul>
         </div>
@@ -925,13 +1071,14 @@
         <div class="hero-container">
             <div class="hero-badge">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
-                Fast & Secure Downloads
+                Fetch-Only Architecture • Isolated Sessions
             </div>
-            <h1>Download YouTube Videos <span>Instantly</span></h1>
+            <h1>YouTube <span>Metadata Fetcher</span></h1>
             <p class="hero-subtitle">
-                The fastest way to save your favorite videos. High quality MP4 and MP3 downloads with no watermarks.
+                <span class="hero-highlight">Fetch metadata first</span>, prepare downloads independently. 
+                Every session is <span class="hero-highlight">isolated</span> and runs in <span class="hero-highlight">parallel</span> — no interference, no waiting.
             </p>
 
             {% if messages %}
@@ -942,9 +1089,13 @@
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    {% else %}
+                    {% elif message.tags == 'error' %}
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     {% endif %}
                     {{ message }}
@@ -953,97 +1104,154 @@
             </div>
             {% endif %}
 
-            <div class="download-form-wrapper">
-                <form method="post" id="downloadForm">
+            <!-- Fetch Form -->
+            <div class="fetch-form-wrapper">
+                <div class="form-header">
+                    <h3>Fetch Video Metadata</h3>
+                    <p>Enter a YouTube URL to retrieve video information</p>
+                </div>
+                <form id="fetchForm">
                     {% csrf_token %}
                     <div class="url-input-group">
                         <div class="url-input-container">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                             </svg>
-                            <input type="url" name="url" class="form-input" 
-                                   placeholder="Paste YouTube link here..." 
-                                   value="{{ form.url.value|default:'' }}"
+                            <input type="url" name="url" id="videoUrl" class="form-input" 
+                                   placeholder="https://www.youtube.com/watch?v=..." 
                                    required>
                         </div>
-                        <button type="submit" class="btn-primary">
+                        <button type="submit" class="btn-fetch" id="fetchBtn">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
-                            Download
+                            Fetch Metadata
                         </button>
                     </div>
-                    {% if form.url.errors %}
-                    <div class="field-errors">
-                        {% for error in form.url.errors %}{{ error }}{% endfor %}
-                    </div>
-                    {% endif %}
+                    <div id="fetchErrors" class="field-errors" style="display: none;"></div>
+                </form>
+                <div class="fetch-info">
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        Metadata only
+                    </span>
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        Isolated session
+                    </span>
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                        </svg>
+                        Parallel processing
+                    </span>
+                </div>
+            </div>
 
-                    <!-- Format Options (shown when URL is entered) -->
-                    <div class="format-options" id="formatOptions">
-                        <div class="format-row">
-                            <div>
-                                <label class="form-label">Format</label>
-                                <div class="format-selector">
-                                    <div class="format-option">
-                                        <input type="radio" name="format_type" id="format_mp4" value="mp4" 
-                                               {% if form.format_type.value == 'mp4' or not form.format_type.value %}checked{% endif %}>
-                                        <label for="format_mp4">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                            </svg>
-                                            <span class="format-name">MP4</span>
-                                        </label>
-                                    </div>
-                                    <div class="format-option">
-                                        <input type="radio" name="format_type" id="format_mp3" value="mp3"
-                                               {% if form.format_type.value == 'mp3' %}checked{% endif %}>
-                                        <label for="format_mp3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                                            </svg>
-                                            <span class="format-name">MP3</span>
-                                        </label>
-                                    </div>
-                                </div>
+            <!-- Metadata Card (Hidden by default) -->
+            <div class="metadata-card" id="metadataCard">
+                <div class="metadata-header">
+                    <img src="" alt="Video thumbnail" class="metadata-thumbnail" id="videoThumbnail">
+                    <div class="metadata-info">
+                        <h3 class="metadata-title" id="videoTitle">Video Title</h3>
+                        <p class="metadata-channel" id="videoChannel">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18" height="18">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            Channel Name
+                        </p>
+                        <div class="metadata-stats">
+                            <div class="metadata-stat">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span id="videoDuration">00:00</span>
                             </div>
-                            <div id="quality-group">
-                                <label class="form-label" for="id_quality">Quality</label>
-                                <select name="quality" id="id_quality" class="form-select">
-                                    <option value="best">Best Quality</option>
-                                    <option value="1080p">1080p (Full HD)</option>
-                                    <option value="720p" selected>720p (HD)</option>
-                                    <option value="480p">480p (SD)</option>
-                                    <option value="worst">Lowest Quality</option>
-                                </select>
-                                <p class="quality-note" id="mp3-note" style="display: none;">
-                                    Audio will be extracted at the best available quality.
-                                </p>
+                            <div class="metadata-stat">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                <span id="videoViews">0 views</span>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-tagline">
-                        <span>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                            Fast processing
-                        </span>
-                        <span>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                            </svg>
-                            Secure
-                        </span>
-                        <span>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                            No watermark
-                        </span>
+                <div class="format-selector-container">
+                    <label class="format-label">Select Format & Quality</label>
+                    <div class="format-grid">
+                        <div class="format-option">
+                            <input type="radio" name="format" id="format_mp4_720" value="mp4_720" checked>
+                            <label for="format_mp4_720">
+                                <span class="format-name">MP4</span>
+                                <span class="format-desc">720p HD</span>
+                            </label>
+                        </div>
+                        <div class="format-option">
+                            <input type="radio" name="format" id="format_mp4_1080" value="mp4_1080">
+                            <label for="format_mp4_1080">
+                                <span class="format-name">MP4</span>
+                                <span class="format-desc">1080p Full HD</span>
+                            </label>
+                        </div>
+                        <div class="format-option">
+                            <input type="radio" name="format" id="format_mp4_480" value="mp4_480">
+                            <label for="format_mp4_480">
+                                <span class="format-name">MP4</span>
+                                <span class="format-desc">480p SD</span>
+                            </label>
+                        </div>
+                        <div class="format-option">
+                            <input type="radio" name="format" id="format_mp3" value="mp3">
+                            <label for="format_mp3">
+                                <span class="format-name">MP3</span>
+                                <span class="format-desc">Audio Only</span>
+                            </label>
+                        </div>
                     </div>
-                </form>
+                </div>
+
+                <div class="download-actions-container">
+                    <button type="button" class="btn-prepare" id="prepareBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Prepare Download
+                    </button>
+                    <button type="button" class="btn-secondary" id="cancelBtn">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Parallel Tasks Section -->
+    <section class="parallel-tasks-section" id="parallel-tasks">
+        <div class="parallel-container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                    Parallel Tasks
+                </h2>
+                <span class="tasks-count" id="tasksCount">0 active</span>
+            </div>
+            
+            <div id="tasksContainer">
+                <div class="empty-tasks">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                    <p>No tasks running. Each fetch creates an independent task that runs in parallel.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -1052,142 +1260,47 @@
     <section class="features" id="features">
         <div class="features-container">
             <div class="features-header">
-                <h2>Why Choose Ditronics?</h2>
-                <p>Built for speed, designed for simplicity</p>
+                <h2>Why Ditronics Architecture Stands Out</h2>
+                <p>Built on isolation, parallelism, and fetch-first principles</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
                     </div>
-                    <h3>High-Speed Processing</h3>
-                    <p>Lightning-fast downloads with optimized servers and parallel processing.</p>
+                    <h3>Isolated Sessions</h3>
+                    <p>Every visitor runs in a completely isolated session. Your tasks never interfere with others—guaranteed privacy and independence.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                         </svg>
                     </div>
-                    <h3>Multiple Formats</h3>
-                    <p>Download in MP4, MP3, and various quality levels from 480p to Full HD.</p>
+                    <h3>Parallel Processing</h3>
+                    <p>Submit multiple fetch requests simultaneously. Each runs independently without blocking. Watch real-time progress in the tasks panel.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15.536a5 5 0 001.414 1.414m2.828-9.9a9 9 0 012.828-2.828" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                         </svg>
                     </div>
-                    <h3>Audio/Video Options</h3>
-                    <p>Extract audio only or download full video with your preferred settings.</p>
+                    <h3>Fetch-Only Architecture</h3>
+                    <p>First step only retrieves metadata—no downloads start automatically. Review details, select format, then prepare your download.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                         </svg>
                     </div>
-                    <h3>Mobile Friendly</h3>
-                    <p>Fully responsive design that works perfectly on any device or screen size.</p>
+                    <h3>Fast Multi-Downloads</h3>
+                    <p>Once prepared, download multiple videos at once. High-speed servers ensure quick transfers with premium SaaS-level performance.</p>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Downloads Section -->
-    <section class="downloads-section" id="downloads">
-        <div class="downloads-container">
-            <div class="section-header">
-                <h2 class="section-title">Recent Downloads</h2>
-            </div>
-            
-            {% if downloads %}
-                {% for download in downloads %}
-                <div class="download-item" data-download-id="{{ download.id }}">
-                    <div class="download-content">
-                        {% if download.thumbnail %}
-                        <img src="{{ download.thumbnail }}" alt="{{ download.title }}" class="thumbnail-small">
-                        {% else %}
-                        <div class="thumbnail-small" style="display: flex; align-items: center; justify-content: center;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--text-muted);">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                        {% endif %}
-                        <div class="download-info">
-                            <div class="download-header">
-                                <div class="download-title">{{ download.title|default:"Processing..." }}</div>
-                                <span class="status-badge status-{{ download.status }}">
-                                    {{ download.get_status_display }}
-                                </span>
-                            </div>
-                            <div class="download-meta">
-                                <span class="format-badge">{{ download.format_type|upper }}</span>
-                                {% if download.duration %}
-                                <span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    {{ download.duration_formatted }}
-                                </span>
-                                {% endif %}
-                                {% if download.file_size_formatted %}
-                                <span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                    {{ download.file_size_formatted }}
-                                </span>
-                                {% endif %}
-                            </div>
-                            
-                            {% if download.status == 'downloading' or download.status == 'pending' or download.status == 'fetching' %}
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: {{ download.progress }}%"></div>
-                            </div>
-                            <div class="progress-text">{{ download.progress }}% complete</div>
-                            {% endif %}
-                            
-                            {% if download.error_message %}
-                            <div class="error-message">{{ download.error_message }}</div>
-                            {% endif %}
-                            
-                            <div class="download-actions">
-                                {% if download.status == 'completed' and download.file_path %}
-                                <a href="{% url 'web_downloader:download_file' download.id %}" class="btn-small btn-success">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                    </svg>
-                                    Download
-                                </a>
-                                {% endif %}
-                                <form method="post" action="{% url 'web_downloader:delete_download' download.id %}" style="display: inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn-small btn-outline" onclick="return confirm('Delete this download?')">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                        Delete
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            {% else %}
-                <div class="empty-state">
-                    <div class="empty-state-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
-                        </svg>
-                    </div>
-                    <h3>No downloads yet</h3>
-                    <p>Paste a YouTube URL above to get started!</p>
-                </div>
-            {% endif %}
         </div>
     </section>
 
@@ -1196,19 +1309,21 @@
         <div class="footer-container">
             <div class="footer-content">
                 <div class="footer-brand">
-                    <div class="logo-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+                    <div class="footer-brand-logo">
+                        <div class="logo-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <span class="logo-text">Di<span>tronics</span></span>
                     </div>
-                    <span class="footer-text">Built by Ditronics</span>
+                    <p class="footer-tagline">Fetch-first. Isolated. Parallel.</p>
                 </div>
                 <ul class="footer-links">
                     <li><a href="#">Privacy Policy</a></li>
                     <li><a href="#">Terms of Service</a></li>
                     <li><a href="#">Contact</a></li>
-                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">API Documentation</a></li>
                 </ul>
                 <div class="footer-social">
                     <a href="#" aria-label="Twitter">
@@ -1229,110 +1344,209 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© 2025 Ditronics. All rights reserved. Fast, secure, no watermark.</p>
+                <p>© 2025 <strong>Ditronics</strong>. All rights reserved. Built with isolated sessions & parallel architecture.</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Show format options when URL is entered
-        const urlInput = document.querySelector('input[name="url"]');
-        const formatOptions = document.getElementById('formatOptions');
-        
-        function toggleFormatOptions() {
-            if (urlInput.value.trim()) {
-                formatOptions.classList.add('visible');
-            } else {
-                formatOptions.classList.remove('visible');
-            }
-        }
-        
-        urlInput.addEventListener('input', toggleFormatOptions);
-        urlInput.addEventListener('paste', () => setTimeout(toggleFormatOptions, 0));
-        
-        // Initial check
-        toggleFormatOptions();
+        // State management
+        let activeTasks = [];
+        let currentVideoData = null;
 
-        // Handle format selection and quality visibility
-        const mp4Radio = document.getElementById('format_mp4');
-        const mp3Radio = document.getElementById('format_mp3');
-        const qualityGroup = document.getElementById('quality-group');
-        const qualitySelect = document.getElementById('id_quality');
-        const mp3Note = document.getElementById('mp3-note');
+        // DOM elements
+        const fetchForm = document.getElementById('fetchForm');
+        const fetchBtn = document.getElementById('fetchBtn');
+        const videoUrlInput = document.getElementById('videoUrl');
+        const fetchErrors = document.getElementById('fetchErrors');
+        const metadataCard = document.getElementById('metadataCard');
+        const prepareBtn = document.getElementById('prepareBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const tasksContainer = document.getElementById('tasksContainer');
+        const tasksCount = document.getElementById('tasksCount');
 
-        function updateQualityVisibility() {
-            if (mp3Radio && mp3Radio.checked) {
-                if (qualitySelect) {
-                    qualitySelect.disabled = true;
-                    qualitySelect.style.opacity = '0.5';
-                }
-                if (mp3Note) mp3Note.style.display = 'block';
-            } else {
-                if (qualitySelect) {
-                    qualitySelect.disabled = false;
-                    qualitySelect.style.opacity = '1';
-                }
-                if (mp3Note) mp3Note.style.display = 'none';
-            }
-        }
-
-        if (mp4Radio) mp4Radio.addEventListener('change', updateQualityVisibility);
-        if (mp3Radio) mp3Radio.addEventListener('change', updateQualityVisibility);
-        
-        // Initial check
-        updateQualityVisibility();
-
-        // Auto-refresh progress for active downloads
-        function updateProgress() {
-            const activeDownloads = document.querySelectorAll('[data-download-id]');
+        // Fetch video metadata
+        fetchForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
             
-            activeDownloads.forEach(item => {
-                const downloadId = item.dataset.downloadId;
-                const statusBadge = item.querySelector('.status-badge');
-                const statusClass = statusBadge.className;
-                
-                // Check if download is still in progress
-                const isActive = statusClass.includes('status-downloading') || 
-                               statusClass.includes('status-pending') ||
-                               statusClass.includes('status-fetching');
-                
-                if (isActive) {
-                    fetch(`/progress/${downloadId}/`)
-                        .then(response => response.json())
-                        .then(data => {
-                            // Update progress bar
-                            const progressFill = item.querySelector('.progress-fill');
-                            const progressText = item.querySelector('.progress-text');
-                            if (progressFill) {
-                                progressFill.style.width = data.progress + '%';
-                            }
-                            if (progressText) {
-                                progressText.textContent = data.progress + '% complete';
-                            }
-                            
-                            // Update title
-                            const titleEl = item.querySelector('.download-title');
-                            if (titleEl && data.title && data.title !== 'Processing...') {
-                                titleEl.textContent = data.title;
-                            }
-                            
-                            // Check if status changed
-                            const currentStatus = data.status;
-                            if (currentStatus === 'completed' || currentStatus === 'failed') {
-                                // Reload page to show updated UI
-                                location.reload();
-                            }
-                        })
-                        .catch(err => console.error('Error fetching progress:', err));
+            const url = videoUrlInput.value.trim();
+            if (!url) return;
+
+            // Update button state
+            fetchBtn.disabled = true;
+            fetchBtn.innerHTML = '<div class="spinner"></div> Fetching...';
+            fetchErrors.style.display = 'none';
+            metadataCard.classList.remove('visible');
+
+            // Create task
+            const taskId = Date.now();
+            addTask(taskId, url, 'fetching');
+
+            try {
+                const response = await fetch(`/api/video-info/?url=${encodeURIComponent(url)}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Update task status
+                    updateTaskStatus(taskId, 'ready', 100);
+                    
+                    // Store video data
+                    currentVideoData = { ...data, url };
+                    
+                    // Populate metadata card
+                    document.getElementById('videoThumbnail').src = data.thumbnail || '';
+                    document.getElementById('videoTitle').textContent = data.title || 'Unknown Title';
+                    document.getElementById('videoChannel').innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18" height="18">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        ${data.channel || 'Unknown Channel'}
+                    `;
+                    document.getElementById('videoDuration').textContent = data.duration_formatted || '00:00';
+                    document.getElementById('videoViews').textContent = data.view_count ? `${formatNumber(data.view_count)} views` : 'N/A';
+                    
+                    // Show metadata card
+                    metadataCard.classList.add('visible');
+                    
+                    // Scroll to metadata card
+                    setTimeout(() => {
+                        metadataCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100);
+                } else {
+                    updateTaskStatus(taskId, 'error', 0);
+                    showError(data.error || 'Failed to fetch video information');
                 }
-            });
+            } catch (error) {
+                updateTaskStatus(taskId, 'error', 0);
+                showError('Network error. Please try again.');
+                console.error('Fetch error:', error);
+            } finally {
+                // Reset button
+                fetchBtn.disabled = false;
+                fetchBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    Fetch Metadata
+                `;
+            }
+        });
+
+        // Prepare download
+        prepareBtn.addEventListener('click', async () => {
+            if (!currentVideoData) return;
+
+            const selectedFormat = document.querySelector('input[name="format"]:checked').value;
+            
+            prepareBtn.disabled = true;
+            prepareBtn.innerHTML = '<div class="spinner"></div> Preparing...';
+
+            // Create preparation task
+            const taskId = Date.now();
+            addTask(taskId, currentVideoData.title, 'preparing');
+
+            // Simulate preparation (in real app, this would call your backend)
+            setTimeout(() => {
+                updateTaskStatus(taskId, 'ready', 100);
+                prepareBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Start Download
+                `;
+                prepareBtn.disabled = false;
+                
+                // Here you would typically start the actual download
+                // For now, we'll just show an alert
+                alert(`Download prepared for: ${currentVideoData.title}\nFormat: ${selectedFormat.toUpperCase()}\n\nIn a full implementation, this would initiate the download.`);
+            }, 2000);
+        });
+
+        // Cancel button
+        cancelBtn.addEventListener('click', () => {
+            metadataCard.classList.remove('visible');
+            videoUrlInput.value = '';
+            currentVideoData = null;
+            prepareBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Prepare Download
+            `;
+        });
+
+        // Task management
+        function addTask(id, title, status) {
+            const task = { id, title, status, progress: 0 };
+            activeTasks.push(task);
+            renderTasks();
         }
-        
-        // Update every 2 seconds
-        setInterval(updateProgress, 2000);
-        
-        // Initial update
-        updateProgress();
+
+        function updateTaskStatus(id, status, progress = 0) {
+            const task = activeTasks.find(t => t.id === id);
+            if (task) {
+                task.status = status;
+                task.progress = progress;
+                renderTasks();
+            }
+        }
+
+        function renderTasks() {
+            const activeCount = activeTasks.filter(t => t.status !== 'ready' && t.status !== 'error').length;
+            tasksCount.textContent = `${activeCount} active`;
+
+            if (activeTasks.length === 0) {
+                tasksContainer.innerHTML = `
+                    <div class="empty-tasks">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                        <p>No tasks running. Each fetch creates an independent task that runs in parallel.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            tasksContainer.innerHTML = `
+                <div class="tasks-grid">
+                    ${activeTasks.map(task => `
+                        <div class="task-card">
+                            <div class="task-header">
+                                <div class="task-title">${escapeHtml(task.title)}</div>
+                                <span class="task-status ${task.status}">${task.status}</span>
+                            </div>
+                            <div class="task-meta">
+                                <span>Task ID: ${task.id}</span>
+                            </div>
+                            <div class="task-progress">
+                                <div class="task-progress-fill" style="width: ${task.progress}%"></div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Utility functions
+        function showError(message) {
+            fetchErrors.textContent = message;
+            fetchErrors.style.display = 'block';
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
 
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -1344,6 +1558,9 @@
                 }
             });
         });
+
+        // Initialize
+        renderTasks();
     </script>
 </body>
 </html>
