@@ -19,6 +19,9 @@ from typing import Optional, Dict, Any, Tuple
 
 logger = logging.getLogger(__name__)
 
+# Path to cookies file (can be set via environment variable)
+COOKIES_FILE = os.environ.get('YOUTUBE_COOKIES_FILE', '/app/cookies/cookies.txt')
+
 
 class YouTubeDownloader:
     """
@@ -146,9 +149,14 @@ class YouTubeDownloader:
             '--flat-playlist',
             '--no-download',
             '--no-warnings',
-            '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-            url
+            '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         ]
+        
+        # Add cookies if available
+        if os.path.exists(COOKIES_FILE):
+            cmd.extend(['--cookies', COOKIES_FILE])
+        
+        cmd.append(url)
 
         try:
             result = subprocess.run(
@@ -251,10 +259,16 @@ class YouTubeDownloader:
             '--no-download',
             '--no-warnings',
             '--no-playlist',
-            '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             '--extractor-args', 'youtube:player_client=android,web',
-            url
         ]
+        
+        # Add cookies if available
+        if os.path.exists(COOKIES_FILE):
+            cmd.extend(['--cookies', COOKIES_FILE])
+            logger.debug(f"Using cookies file: {COOKIES_FILE}")
+        
+        cmd.append(url)
 
         try:
             result = subprocess.run(
@@ -357,12 +371,17 @@ class YouTubeDownloader:
             '--newline',
             '--progress',
             '--restrict-filenames',
-            '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             '--extractor-args', 'youtube:player_client=android,web',
             '--no-check-certificate',
             '--no-playlist',
-            url
         ]
+        
+        # Add cookies if available
+        if os.path.exists(COOKIES_FILE):
+            cmd.extend(['--cookies', COOKIES_FILE])
+        
+        cmd.append(url)
 
         return self._execute_download(cmd, progress_callback)
 
@@ -399,8 +418,13 @@ class YouTubeDownloader:
             '--extractor-args', 'youtube:player_client=android,web',
             '--no-check-certificate',
             '--no-playlist',  # Don't download entire playlist if URL contains playlist
-            url
         ]
+        
+        # Add cookies if available
+        if os.path.exists(COOKIES_FILE):
+            cmd.extend(['--cookies', COOKIES_FILE])
+        
+        cmd.append(url)
 
         return cmd
 

@@ -133,3 +133,9 @@ media/
 *.temp
 tmp/
 temp/
+
+# Cookies (sensitive - contains login session)
+cookies/cookies.txt
+cookies/*.txt
+!cookies/.gitkeep
+!cookies/README.md

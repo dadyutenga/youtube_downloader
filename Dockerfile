@@ -54,7 +54,7 @@ RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 COPY --chown=appuser:appgroup . .
 
 # Create necessary directories
-RUN mkdir -p /app/downloads /app/staticfiles /app/logs /app/data && \
+RUN mkdir -p /app/downloads /app/staticfiles /app/logs /app/data /app/cookies && \
     chown -R appuser:appgroup /app
 
 # Setup cron job for daily cleanup of downloads folder

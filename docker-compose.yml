@@ -29,6 +29,8 @@ services:
       - db_data:/app/data
       # Logs
       - logs_data:/app/logs
+      # YouTube cookies file (create this on host: ./cookies/cookies.txt)
+      - ./cookies:/app/cookies:ro
     
     # Resource limits for slim container
     deploy:
