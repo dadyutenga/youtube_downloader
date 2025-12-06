@@ -83,6 +83,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(DB_DIR, 'db.sqlite3'),
+        'OPTIONS': {
+            'timeout': 20,  # Increase timeout for locked database
+            'check_same_thread': False,  # Allow multi-threading
+        },
+        'CONN_MAX_AGE': 0,  # Close connections immediately to prevent locks
     }
 }
 

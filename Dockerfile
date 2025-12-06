@@ -78,4 +78,4 @@ COPY --chown=appuser:appgroup docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["gunicorn", "--bind", "0.0.0.0:8090", "--workers", "2", "--threads", "4", "--worker-class", "gthread", "--timeout", "300", "youtube_downloader.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8090", "--workers", "4", "--threads", "8", "--worker-class", "gthread", "--timeout", "600", "--max-requests", "1000", "--max-requests-jitter", "100", "youtube_downloader.wsgi:application"]

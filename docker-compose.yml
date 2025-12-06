@@ -32,15 +32,15 @@ services:
       # YouTube cookies file (create this on host: ./cookies/cookies.txt)
       - ./cookies:/app/cookies
     
-    # Resource limits for slim container
+    # Resource limits for performance
     deploy:
       resources:
         limits:
-          cpus: '2'
-          memory: 1G
+          cpus: '4'
+          memory: 2G
         reservations:
-          cpus: '0.5'
-          memory: 256M
+          cpus: '1'
+          memory: 512M
     
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8090/')"]
